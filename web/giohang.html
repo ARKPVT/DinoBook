@@ -1,0 +1,1010 @@
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Giỏ hàng - DINO Book Store</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <style>
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      margin: 0;
+      background: #f8f8f8;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      transition: background 0.5s;
+    }
+    /* Loading overlay */
+    #overlay-loading {
+      position: fixed;
+      z-index: 9999;
+      inset: 0;
+      background: linear-gradient(120deg, #ffecd2 0%, #fcb69f 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.7s cubic-bezier(.4,2,.6,1);
+    }
+    #overlay-loading.hide {
+      opacity: 0;
+      pointer-events: none;
+    }
+    .dino-logo {
+      font-size: 3.5rem;
+      margin-bottom: 18px;
+      filter: drop-shadow(0 2px 8px #ff7e3f44);
+      animation: dino-bounce 1.2s infinite alternate cubic-bezier(.4,2,.6,1);
+    }
+    @keyframes dino-bounce {
+      to { transform: translateY(-12px) scale(1.08);}
+    }
+    .loading-text {
+      font-size: 1.3rem;
+      color: #ff7e3f;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      margin-bottom: 10px;
+      text-shadow: 0 2px 8px #fff8;
+    }
+    .loading-bar {
+      width: 80px;
+      height: 6px;
+      background: #fff;
+      border-radius: 3px;
+      overflow: hidden;
+      position: relative;
+      margin-top: 8px;
+    }
+    .loading-bar-inner {
+      width: 0;
+      height: 100%;
+      background: linear-gradient(90deg, #ff7e3f 40%, #ffb347 100%);
+      border-radius: 3px;
+      animation: loading-bar-move 1.2s linear forwards;
+    }
+    @keyframes loading-bar-move {
+      to { width: 100%; }
+    }
+    /* --- HEADER, FOOTER, NAV giữ nguyên như index --- */
+    .main-nav {
+      width: 100%;
+      background: linear-gradient(90deg, #ffecd2 0%, #fcb69f 100%);
+      box-shadow: 0 2px 16px #ff7e3f11;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      font-family: inherit;
+      transition: box-shadow 0.3s;
+    }
+    .main-nav .nav-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      padding: 0 24px;
+      height: 64px;
+      justify-content: space-between;
+    }
+    .main-nav .logo {
+      font-size: 2rem;
+      font-weight: 900;
+      color: #ff7e3f;
+      letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-shadow: 0 2px 8px #fff8;
+      user-select: none;
+    }
+    .main-nav .logo .fa-book-open { color: #1a3d2f; }
+    .main-nav ul.nav-links {
+      list-style: none;
+      display: flex;
+      gap: 18px;
+      align-items: center;
+      margin: 0;
+      padding: 0;
+    }
+    .main-nav ul.nav-links li {
+      position: relative;
+    }
+    .main-nav ul.nav-links li a,
+    .main-nav ul.nav-links li .nav-btn {
+      text-decoration: none;
+      color: #1a3d2f;
+      font-weight: 600;
+      font-size: 1.08rem;
+      padding: 8px 16px;
+      border-radius: 6px;
+      transition: background 0.18s, color 0.18s, box-shadow 0.18s, transform 0.18s;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      outline: none;
+    }
+    .main-nav ul.nav-links li a:hover,
+    .main-nav ul.nav-links li .nav-btn:hover {
+      background: #ff7e3f22;
+      color: #ff7e3f;
+      box-shadow: 0 2px 8px #ffecd244;
+      transform: translateY(-2px) scale(1.05);
+    }
+    .main-nav .dropdown {
+      position: absolute;
+      top: 110%;
+      left: 0;
+      min-width: 170px;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 8px 32px 0 rgba(255,126,63,0.13);
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(10px) scale(0.98);
+      transition: all 0.25s cubic-bezier(.4,2,.6,1);
+      z-index: 10;
+    }
+    .main-nav ul.nav-links li:hover > .dropdown,
+    .main-nav ul.nav-links li:focus-within > .dropdown,
+    .main-nav ul.nav-links li.open > .dropdown {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0) scale(1);
+    }
+    .main-nav .dropdown a {
+      color: #1a3d2f;
+      padding: 12px 18px;
+      display: block;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 500;
+      transition: background 0.18s, color 0.18s;
+    }
+    .main-nav .dropdown a:hover {
+      background: #ffecd2;
+      color: #ff7e3f;
+    }
+    .main-nav .menu-toggle { display: none; }
+    @media (max-width: 900px) {
+      .main-nav .nav-container { padding: 0 10px; }
+      .main-nav ul.nav-links {
+        position: fixed;
+        top: 64px;
+        left: 0;
+        right: 0;
+        background: #fff;
+        flex-direction: column;
+        gap: 0;
+        box-shadow: 0 8px 32px 0 rgba(255,126,63,0.13);
+        border-radius: 0 0 18px 18px;
+        overflow: hidden;
+        max-height: 0;
+        transition: max-height 0.35s cubic-bezier(.4,2,.6,1);
+        z-index: 99;
+      }
+      .main-nav ul.nav-links.open {
+        max-height: 420px;
+        transition: max-height 0.45s cubic-bezier(.4,2,.6,1);
+      }
+      .main-nav ul.nav-links li {
+        width: 100%;
+      }
+      .main-nav ul.nav-links li a,
+      .main-nav ul.nav-links li .nav-btn {
+        width: 100%;
+        justify-content: flex-start;
+        padding: 14px 24px;
+        font-size: 1.08rem;
+        border-radius: 0;
+      }
+      .main-nav .dropdown {
+        position: static;
+        box-shadow: none;
+        background: #f8f8f8;
+        border-radius: 0;
+        transform: none;
+        opacity: 1;
+        pointer-events: auto;
+        min-width: unset;
+        display: none;
+      }
+      .main-nav ul.nav-links li.open > .dropdown {
+        display: block;
+      }
+      .main-nav .menu-toggle {
+        display: block;
+      }
+    }
+    .cart-container {
+      max-width: 900px;
+      margin: 48px auto 32px auto;
+      background: #fff;
+      border-radius: 18px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+      padding: 32px 24px 24px 24px;
+      min-height: 400px;
+      position: relative;
+      animation: fadeInCart 1s cubic-bezier(.4,2,.6,1);
+    }
+    @keyframes fadeInCart {
+      from { opacity: 0; transform: translateY(40px) scale(0.98);}
+      to { opacity: 1; transform: none;}
+    }
+    .cart-title {
+      font-size: 2.1rem;
+      font-weight: 800;
+      color: #1a3d2f;
+      margin-bottom: 18px;
+      letter-spacing: 0.5px;
+      text-shadow: 0 2px 12px rgba(255,126,63,0.08), 0 1px 0 #fff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .cart-title .dino {
+      font-size: 1.3em;
+      vertical-align: middle;
+      margin-right: 0.15em;
+      filter: drop-shadow(0 2px 2px #ff7e3f33);
+      animation: dino-bounce 1.2s infinite alternate cubic-bezier(.4,2,.6,1);
+    }
+    .cart-list {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0 18px;
+    }
+    .cart-list th, .cart-list td {
+      text-align: left;
+      padding: 10px 8px;
+      font-size: 1.05rem;
+      transition: background 0.2s;
+    }
+    .cart-list th {
+      color: #ff7e3f;
+      font-weight: 800;
+      font-size: 1.08rem;
+      border-bottom: 2px solid #ffecd2;
+      background: #fff;
+    }
+    .cart-list tr {
+      transition: box-shadow 0.3s, transform 0.3s;
+    }
+    .cart-list tbody tr:hover {
+      box-shadow: 0 8px 32px #ff7e3f22, 0 2px 12px #ffecd244;
+      transform: scale(1.015) translateY(-2px);
+      z-index: 2;
+      background: #fff;
+    }
+    .cart-list td {
+      vertical-align: middle;
+      background: #fff6f2;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px #ffecd244;
+    }
+    .cart-cover {
+      width: 60px;
+      height: 85px;
+      object-fit: cover;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px #ffecd244;
+      background: #eee;
+      transition: box-shadow 0.2s, transform 0.2s;
+    }
+    .cart-list tbody tr:hover .cart-cover {
+      box-shadow: 0 4px 16px #ffb34744;
+      transform: scale(1.07) translateY(-2px);
+    }
+    .cart-book-title {
+      font-weight: 700;
+      color: #1a3d2f;
+      font-size: 1.08rem;
+      margin-bottom: 2px;
+    }
+    .cart-book-author {
+      color: #ff7e3f;
+      font-size: 0.98rem;
+      font-weight: 600;
+    }
+    .cart-book-genre {
+      display: inline-block;
+      background: #ffecd2cc;
+      color: #ff7e3f;
+      font-size: 0.92rem;
+      font-weight: 600;
+      border-radius: 8px;
+      padding: 2px 10px;
+      margin-top: 4px;
+      margin-bottom: 0;
+      letter-spacing: 0.2px;
+      box-shadow: 0 2px 8px #fff8;
+      transition: background 0.2s, color 0.2s;
+    }
+    .cart-list tbody tr:hover .cart-book-genre {
+      background: #ffb347cc;
+      color: #fff;
+    }
+    .cart-qty {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .cart-qty-btn {
+      background: #ffecd2;
+      color: #ff7e3f;
+      border: none;
+      border-radius: 50%;
+      width: 28px;
+      height: 28px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s, transform 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 8px #ffecd244;
+    }
+    .cart-qty-btn:hover { background: #ffb347; color: #fff; transform: scale(1.15);}
+    .cart-remove-btn {
+      background: #fff;
+      color: #e05d1f;
+      border: none;
+      border-radius: 6px;
+      padding: 7px 14px;
+      font-size: 0.98rem;
+      cursor: pointer;
+      font-weight: 600;
+      box-shadow: 0 2px 8px #ffecd244;
+      margin-left: 8px;
+      transition: background 0.2s, color 0.2s, transform 0.2s;
+    }
+    .cart-remove-btn:hover { background: #ffecd2; color: #ff7e3f; transform: scale(1.08);}
+    .cart-total-row td {
+      background: none !important;
+      box-shadow: none !important;
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #e05d1f;
+      border-top: 2px solid #ffecd2;
+      text-align: right;
+      padding-top: 18px;
+    }
+    .cart-empty {
+      text-align: center;
+      color: #ff7e3f;
+      font-size: 1.2rem;
+      padding: 48px 0 32px 0;
+      font-weight: 700;
+      animation: fadeInCart 1s cubic-bezier(.4,2,.6,1);
+    }
+    .cart-actions {
+      margin-top: 32px;
+      display: flex;
+      justify-content: flex-end;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+    .btn {
+      background: #ff7e3f;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 12px 28px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.2s, box-shadow 0.2s, transform 0.2s;
+      font-weight: 700;
+      box-shadow: 0 2px 8px #ffecd244;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .btn:hover { background: #e05d1f; box-shadow: 0 4px 16px #ffb34744; transform: scale(1.07);}
+    .btn2 {
+      background: #ffecd2;
+      color: #ff7e3f;
+      border: none;
+      border-radius: 6px;
+      padding: 10px 18px;
+      font-size: 0.98rem;
+      cursor: pointer;
+      font-weight: 700;
+      margin-right: 8px;
+      box-shadow: 0 2px 8px #ffecd244;
+      transition: background 0.2s, color 0.2s, transform 0.2s;
+    }
+    .btn2:hover { background: #ffb347; color: #fff; transform: scale(1.07);}
+    @media (max-width: 700px) {
+      .cart-container { padding: 12px 2vw 18px 2vw; }
+      .cart-list th, .cart-list td { font-size: 0.98rem; }
+      .cart-cover { width: 40px; height: 56px; }
+    }
+    /* Checkbox hiệu ứng */
+    input[type="checkbox"].cart-select {
+      accent-color: #ff7e3f;
+      box-shadow: 0 2px 8px #ffecd244;
+      transition: box-shadow 0.2s, transform 0.2s;
+      cursor: pointer;
+    }
+    input[type="checkbox"].cart-select:hover {
+      box-shadow: 0 4px 16px #ffb34744;
+      transform: scale(1.18);
+    }
+    input[type="checkbox"].cart-select:checked {
+      box-shadow: 0 4px 16px #ffb34744;
+      outline: 2px solid #ff7e3f;
+    }
+    /* Popup thanh toán */
+    .cart-popup-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(30,30,30,0.18);
+      z-index: 99999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+    }
+    .cart-popup-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+      animation: fadeInCart 0.5s;
+    }
+    .cart-popup, .cart-form-popup {
+      background: #fff;
+      border-radius: 18px;
+      box-shadow: 0 8px 48px #ff7e3f44, 0 2px 12px #ffecd244;
+      max-width: 370px;
+      width: 95vw;
+      padding: 32px 24px 24px 24px;
+      text-align: center;
+      animation: popupIn 0.5s cubic-bezier(.4,2,.6,1);
+      position: relative;
+      transform: scale(0.95) translateY(30px);
+      opacity: 0;
+      transition: transform 0.4s, opacity 0.4s;
+    }
+    .cart-popup-overlay.active .cart-popup,
+    .cart-popup-overlay.active .cart-form-popup {
+      transform: scale(1) translateY(0);
+      opacity: 1;
+    }
+    @keyframes popupIn {
+      from { opacity: 0; transform: scale(0.95) translateY(30px);}
+      to { opacity: 1; transform: scale(1) translateY(0);}
+    }
+    .cart-popup .fa-check-circle {
+      color: #ff7e3f;
+      font-size: 2.5rem;
+      margin-bottom: 12px;
+      animation: dino-bounce 1.2s infinite alternate cubic-bezier(.4,2,.6,1);
+    }
+    .cart-popup-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: #1a3d2f;
+      margin-bottom: 10px;
+    }
+    .cart-popup-btn {
+      background: #ff7e3f;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 10px 28px;
+      font-size: 1rem;
+      cursor: pointer;
+      margin-top: 18px;
+      transition: background 0.2s, box-shadow 0.2s, transform 0.2s;
+      font-weight: 700;
+      box-shadow: 0 2px 8px #ffecd244;
+      display: inline-block;
+    }
+    .cart-popup-btn:hover { background: #e05d1f; box-shadow: 0 4px 16px #ffb34744; transform: scale(1.07);}
+    /* Popup nhập thông tin */
+    .cart-form-popup label {
+      font-weight: 700;
+      color: #1a3d2f;
+      margin-bottom: 4px;
+      display: block;
+      font-size: 1.05rem;
+      text-align: left;
+    }
+    .cart-form-popup input, .cart-form-popup textarea {
+      width: 100%;
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: 1.5px solid #ffecd2;
+      font-size: 1rem;
+      margin-bottom: 14px;
+      background: #fff6f2;
+      transition: border 0.2s, box-shadow 0.2s;
+      outline: none;
+    }
+    .cart-form-popup input:focus, .cart-form-popup textarea:focus {
+      border: 2px solid #ff7e3f;
+      box-shadow: 0 2px 8px #ffecd244;
+    }
+    .cart-form-popup .cart-popup-btn {
+      width: 100%;
+      margin-top: 0;
+    }
+    .cart-form-popup .cart-form-error {
+      color: #e05d1f;
+      font-size: 0.98rem;
+      margin-bottom: 8px;
+      min-height: 1.2em;
+      font-weight: 600;
+      text-align: center;
+    }
+    .cart-form-popup .cart-form-title {
+      font-size: 1.18rem;
+      font-weight: 800;
+      color: #1a3d2f;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+    .dino-footer {
+      width: 100%;
+      background: linear-gradient(90deg, #ffecd2 0%, #fcb69f 100%);
+      box-shadow: 0 -2px 24px #ff7e3f22;
+      padding: 0;
+      margin: 0;
+      position: relative;
+      z-index: 10;
+      overflow: hidden;
+      margin-top: auto;
+    }
+    .dino-footer .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 32px 16px 18px 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+    .dino-footer .footer-logo {
+      font-size: 1.7rem;
+      font-weight: 900;
+      color: #ff7e3f;
+      letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+      text-shadow: 0 2px 16px #fff8, 0 1px 0 #fff;
+      filter: drop-shadow(0 2px 8px #ff7e3f33);
+      user-select: none;
+      background: linear-gradient(90deg, #ff7e3f 40%, #ffb347 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .dino-footer .footer-dino {
+      font-size: 2.1rem;
+      filter: drop-shadow(0 2px 8px #ffb34788);
+      animation: dino-footer-bounce 1.2s infinite alternate cubic-bezier(.4,2,.6,1);
+    }
+    @keyframes dino-footer-bounce {
+      to { transform: translateY(-7px) scale(1.08);}
+    }
+    .dino-footer .footer-social {
+      display: flex;
+      gap: 22px;
+      margin-bottom: 14px;
+    }
+    .dino-footer .footer-social a {
+      color: #ff7e3f;
+      font-size: 1.35rem;
+      background: #fff6f2;
+      border-radius: 50%;
+      width: 38px;
+      height: 38px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 12px #ffecd244;
+      transition: 
+        background 0.25s cubic-bezier(.4,2,.6,1),
+        color 0.18s,
+        box-shadow 0.25s,
+        transform 0.18s;
+      position: relative;
+      overflow: hidden;
+    }
+    .dino-footer .footer-social a:hover {
+      background: linear-gradient(90deg, #ffecd2 0%, #fcb69f 100%);
+      color: #fff;
+      box-shadow: 0 4px 24px #ffb34744, 0 2px 12px #ffecd244;
+      transform: translateY(-4px) scale(1.13) rotateZ(-4deg);
+      text-shadow: 0 2px 8px #ff7e3f88;
+    }
+    .dino-footer .footer-copy {
+      font-size: 1rem;
+      color: #ff7e3f;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      margin-top: 2px;
+      text-shadow: 0 2px 8px #fff8;
+      opacity: 0.85;
+      text-align: center;
+    }
+    @media (max-width: 600px) {
+      .dino-footer .footer-content { padding: 22px 4px 10px 4px; }
+      .dino-footer .footer-logo { font-size: 1.1rem; }
+      .dino-footer .footer-social a { width: 32px; height: 32px; font-size: 1.1rem; }
+      .dino-footer .footer-copy { font-size: 0.93rem; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Loading overlay -->
+  <div id="overlay-loading">
+    <div class="dino-logo">🦕</div>
+    <div class="loading-text">DINO Book Store</div>
+    <div class="loading-bar"><div class="loading-bar-inner"></div></div>
+  </div>
+  <!-- HEADER giống index -->
+  <nav class="main-nav">
+    <div class="nav-container">
+      <div class="logo">
+        <i class="fa-solid fa-book-open"></i>
+        DINO <span style="color:#1a3d2f;">Book</span>
+      </div>
+      <ul class="nav-links">
+        <li><a href="../index.html"><i class="fa fa-home"></i>Trang chủ</a></li>
+        <li><a href="GioiThieu.html"><i class="fa fa-book"></i>Giới thiệu</a></li>
+        <li><a href="lienhe.html"><i class="fa fa-phone"></i>Liên hệ</a></li>
+        <li><a href="giohang.html"><i class="fa fa-shopping-cart"></i>Giỏ hàng</a></li>
+        <li>
+          <button class="nav-btn" tabindex="0"><i class="fa fa-user"></i>Tài khoản <i class="fa fa-caret-down"></i></button>
+          <div class="dropdown">
+            <a href="dangnhap.html"><i class="fa fa-sign-in-alt"></i> Đăng nhập</a>
+            <a href="dangky.html"><i class="fa fa-user-plus"></i> Đăng ký</a>
+            <a href="#"><i class="fa fa-user-circle"></i> Hồ sơ</a>
+            <a href="#"><i class="fa fa-sign-out-alt"></i> Đăng xuất</a>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </nav>
+  <div class="cart-container" style="opacity:0;transition:opacity 0.7s cubic-bezier(.4,2,.6,1);">
+    <div class="cart-title"><span class="dino">🦕</span> Giỏ hàng của bạn</div>
+    <div style="margin-bottom:18px;">
+      <button class="btn2" id="selectAllBtn"><i class="fa fa-check-square"></i> Chọn tất cả</button>
+      <button class="btn2" id="deselectAllBtn"><i class="fa fa-square"></i> Bỏ chọn tất cả</button>
+    </div>
+    <div id="cartContent"></div>
+    <div class="cart-actions">
+      <a href="../index.html" class="btn"><i class="fa fa-arrow-left"></i> Quay lại trang chủ</a>
+      <button class="btn" id="checkoutBtn"><i class="fa fa-credit-card"></i> Thanh toán</button>
+    </div>
+  </div>
+  <!-- FOOTER giống index -->
+  <footer class="dino-footer">
+    <div class="footer-content">
+      <div class="footer-logo">
+        <span class="footer-dino">🦕</span> <span>DINO Book Store</span>
+      </div>
+      <div class="footer-social">
+        <a href="#" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+        <a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
+        <a href="#" title="Twitter"><i class="fab fa-twitter"></i></a>
+        <a href="#" title="Github"><i class="fab fa-github"></i></a>
+      </div>
+      <div class="footer-copy">
+        &copy; 2024 DINO Book Store. All rights reserved.
+      </div>
+    </div>
+  </footer>
+  <!-- POPUP THANH TOÁN -->
+  <div class="cart-popup-overlay" id="cartPopupOverlay">
+    <div class="cart-popup" id="cartPopupSuccess" style="display:none;">
+      <i class="fa fa-check-circle"></i>
+      <div class="cart-popup-title">Đặt hàng thành công!</div>
+      <div id="cartPopupMsg"></div>
+      <button class="cart-popup-btn" id="cartPopupClose">Đóng</button>
+    </div>
+    <form class="cart-form-popup" id="cartFormPopup" style="display:none;" autocomplete="off">
+      <div class="cart-form-title">Thông tin thanh toán</div>
+      <div class="cart-form-error" id="cartFormError"></div>
+      <label for="cartName">Họ và tên *</label>
+      <input type="text" id="cartName" required>
+      <label for="cartPhone">Số điện thoại *</label>
+      <input type="tel" id="cartPhone" required pattern="0[0-9]{9,10}">
+      <label for="cartAddress">Địa chỉ nhận hàng *</label>
+      <textarea id="cartAddress" rows="2" required></textarea>
+      <button type="submit" class="cart-popup-btn"><i class="fa fa-credit-card"></i> Xác nhận thanh toán</button>
+      <button type="button" class="cart-popup-btn" id="cartFormCancel" style="background:#ffecd2;color:#ff7e3f;margin-top:10px;">Hủy</button>
+    </form>
+  </div>
+  <script>
+    // Loading hiệu ứng
+    window.addEventListener('DOMContentLoaded', function() {
+      setTimeout(() => {
+        document.getElementById('overlay-loading').classList.add('hide');
+        setTimeout(() => {
+          document.getElementById('overlay-loading').style.display = 'none';
+          document.querySelector('.cart-container').style.opacity = 1;
+        }, 700);
+      }, 1200);
+    });
+
+    // ========== MENU NAVIGATION JS ==========
+    const menuToggle = document.querySelector('.main-nav .menu-toggle');
+    const navLinks = document.querySelector('.main-nav .nav-links');
+    if(menuToggle) menuToggle.onclick = () => {
+      navLinks.classList.toggle('open');
+    };
+    document.querySelectorAll('.main-nav .nav-btn').forEach(btn => {
+      btn.onclick = (e) => {
+        e.preventDefault();
+        document.querySelectorAll('.main-nav ul.nav-links li').forEach(li => {
+          if (li !== btn.parentElement) li.classList.remove('open');
+        });
+        btn.parentElement.classList.toggle('open');
+      };
+      document.addEventListener('click', function(ev) {
+        if (!btn.parentElement.contains(ev.target)) {
+          btn.parentElement.classList.remove('open');
+        }
+      });
+    });
+    document.querySelectorAll('.main-nav .nav-links a').forEach(link => {
+      link.onclick = () => {
+        navLinks.classList.remove('open');
+        document.querySelectorAll('.main-nav ul.nav-links li').forEach(li => li.classList.remove('open'));
+      };
+    });
+    // ========== TÀI KHOẢN ==========
+    function updateAccountMenu() {
+      const tenNguoiDung = localStorage.getItem('tenNguoiDung');
+      const tenDangNhap = localStorage.getItem('tenDangNhap');
+      const navBtn = document.querySelector('.main-nav .nav-btn');
+      const dropdown = navBtn?.parentElement.querySelector('.dropdown');
+      if (!navBtn || !dropdown) return;
+      if (tenNguoiDung && tenNguoiDung.trim() !== "") {
+        navBtn.innerHTML = `<i class="fa fa-user"></i> ${tenNguoiDung} <i class="fa fa-caret-down"></i>`;
+        dropdown.querySelectorAll('a').forEach(a => {
+          if (a.href.includes('dangnhap') || a.href.includes('dangky')) {
+            a.style.display = 'none';
+          } else {
+            a.style.display = '';
+          }
+        });
+      } else {
+        navBtn.innerHTML = `<i class="fa fa-user"></i> Tài khoản <i class="fa fa-caret-down"></i>`;
+        dropdown.querySelectorAll('a').forEach(a => {
+          if (a.href.includes('dangnhap') || a.href.includes('dangky')) {
+            a.style.display = '';
+          } else {
+            a.style.display = 'none';
+          }
+        });
+      }
+    }
+    document.addEventListener('DOMContentLoaded', function() {
+      updateAccountMenu();
+      document.querySelectorAll('.main-nav .dropdown a').forEach(a => {
+        if (a.textContent.includes('Đăng xuất')) {
+          a.addEventListener('click', function(e) {
+            e.preventDefault();
+            localStorage.removeItem('tenNguoiDung');
+            localStorage.removeItem('tenDangNhap');
+            updateAccountMenu();
+            window.location.reload();
+          });
+        }
+      });
+    });
+
+    // ========== GIỎ HÀNG ==========
+    const genres = [
+      { key: "trinhtham", label: "Trinh thám", icon: "fa-user-secret" },
+      { key: "vientuong", label: "Viễn tưởng", icon: "fa-rocket" },
+      { key: "huyenhuyen", label: "Huyền huyễn", icon: "fa-dragon" },
+      { key: "quansu", label: "Quân sự", icon: "fa-shield-halved" },
+      { key: "ngontinh", label: "Ngôn tình", icon: "fa-heart" }
+    ];
+    function getCart() {
+      try {
+        return JSON.parse(localStorage.getItem('cart')) || [];
+      } catch { return []; }
+    }
+    function setCart(cart) {
+      localStorage.setItem('cart', JSON.stringify(cart));
+    }
+    function getSelected() {
+      try {
+        return JSON.parse(localStorage.getItem('cart_selected')) || [];
+      } catch { return []; }
+    }
+    function setSelected(arr) {
+      localStorage.setItem('cart_selected', JSON.stringify(arr));
+    }
+    function renderCart() {
+      const cart = getCart();
+      let selected = getSelected();
+      if (!Array.isArray(selected) || selected.length !== cart.length) {
+        selected = cart.map(()=>true);
+        setSelected(selected);
+      }
+      const cartContent = document.getElementById('cartContent');
+      if (!cart.length) {
+        cartContent.innerHTML = `<div class="cart-empty">Giỏ hàng của bạn đang trống.<br>Hãy thêm sách để bắt đầu hành trình đọc nhé!</div>`;
+        document.getElementById('checkoutBtn').disabled = true;
+        document.getElementById('checkoutBtn').style.opacity = 0.5;
+        document.getElementById('selectAllBtn').disabled = true;
+        document.getElementById('deselectAllBtn').disabled = true;
+        return;
+      }
+      document.getElementById('checkoutBtn').disabled = false;
+      document.getElementById('checkoutBtn').style.opacity = 1;
+      document.getElementById('selectAllBtn').disabled = false;
+      document.getElementById('deselectAllBtn').disabled = false;
+      let total = 0;
+      let html = `<table class="cart-list"><thead>
+        <tr>
+          <th></th>
+          <th>Sách</th>
+          <th>Thể loại</th>
+          <th>Giá</th>
+          <th>Số lượng</th>
+          <th>Thành tiền</th>
+          <th></th>
+          <th>Chọn</th>
+        </tr>
+      </thead><tbody>`;
+      cart.forEach((item, i) => {
+        let genreObj = genres.find(g => g.key === item.genre);
+        let genreLabel = genreObj ? genreObj.label : "";
+        let genreIcon = genreObj ? genreObj.icon : "";
+        let itemTotal = item.price * item.qty;
+        if (selected[i]) total += itemTotal;
+        html += `<tr>
+          <td><img class="cart-cover" src="${item.cover}" alt="${item.title}"></td>
+          <td>
+            <div class="cart-book-title">${item.title}</div>
+            <div class="cart-book-author"><i class="fa fa-user"></i> ${item.author}</div>
+          </td>
+          <td><span class="cart-book-genre"><i class="fa ${genreIcon}"></i> ${genreLabel}</span></td>
+          <td>${item.price.toLocaleString('vi-VN')}₫</td>
+          <td>
+            <div class="cart-qty">
+              <button class="cart-qty-btn" onclick="changeQty(${i},-1)" title="Giảm"><i class="fa fa-minus"></i></button>
+              <span>${item.qty}</span>
+              <button class="cart-qty-btn" onclick="changeQty(${i},1)" title="Tăng"><i class="fa fa-plus"></i></button>
+            </div>
+          </td>
+          <td>${itemTotal.toLocaleString('vi-VN')}₫</td>
+          <td>
+            <button class="cart-remove-btn" onclick="removeItem(${i})"><i class="fa fa-trash"></i> Xóa</button>
+          </td>
+          <td style="text-align:center;">
+            <input type="checkbox" class="cart-select" data-idx="${i}" ${selected[i] ? "checked" : ""} style="width:20px;height:20px;">
+          </td>
+        </tr>`;
+      });
+      html += `<tr class="cart-total-row"><td colspan="8">Tổng cộng (đã chọn): ${total.toLocaleString('vi-VN')}₫</td></tr>`;
+      html += `</tbody></table>`;
+      cartContent.innerHTML = html;
+      document.querySelectorAll('.cart-select').forEach(cb=>{
+        cb.onchange = function() {
+          let idx = +this.getAttribute('data-idx');
+          selected[idx] = this.checked;
+          setSelected(selected);
+          renderCart();
+        }
+      });
+    }
+    window.changeQty = function(idx, delta) {
+      let cart = getCart();
+      if (!cart[idx]) return;
+      cart[idx].qty += delta;
+      if (cart[idx].qty < 1) cart[idx].qty = 1;
+      setCart(cart);
+      renderCart();
+    }
+    window.removeItem = function(idx) {
+      let cart = getCart();
+      let selected = getSelected();
+      cart.splice(idx, 1);
+      selected.splice(idx, 1);
+      setCart(cart);
+      setSelected(selected);
+      renderCart();
+    }
+    document.getElementById('selectAllBtn').onclick = function() {
+      let cart = getCart();
+      setSelected(cart.map(()=>true));
+      renderCart();
+    }
+    document.getElementById('deselectAllBtn').onclick = function() {
+      let cart = getCart();
+      setSelected(cart.map(()=>false));
+      renderCart();
+    }
+
+    // ========== THANH TOÁN ==========
+    const cartPopupOverlay = document.getElementById('cartPopupOverlay');
+    const cartPopupSuccess = document.getElementById('cartPopupSuccess');
+    const cartPopupClose = document.getElementById('cartPopupClose');
+    const cartPopupMsg = document.getElementById('cartPopupMsg');
+    const cartFormPopup = document.getElementById('cartFormPopup');
+    const cartFormError = document.getElementById('cartFormError');
+    const cartFormCancel = document.getElementById('cartFormCancel');
+    document.getElementById('checkoutBtn').onclick = function() {
+      const cart = getCart();
+      const selected = getSelected();
+      let selectedBooks = cart.filter((item,i)=>selected[i]);
+      if (!selectedBooks.length) {
+        alert("Vui lòng chọn ít nhất một sách để thanh toán!");
+        return;
+      }
+      cartFormPopup.style.display = "";
+      cartPopupSuccess.style.display = "none";
+      cartPopupOverlay.classList.add('active');
+      document.body.style.overflow = 'hidden';
+      cartFormError.textContent = "";
+      cartFormPopup.reset && cartFormPopup.reset();
+    };
+    cartFormCancel.onclick = function() {
+      cartPopupOverlay.classList.remove('active');
+      document.body.style.overflow = '';
+    };
+    cartPopupOverlay.onclick = function(e) {
+      if (e.target === cartPopupOverlay) {
+        cartPopupOverlay.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+    };
+    cartFormPopup.onsubmit = function(e) {
+      e.preventDefault();
+      const name = document.getElementById('cartName').value.trim();
+      const phone = document.getElementById('cartPhone').value.trim();
+      const address = document.getElementById('cartAddress').value.trim();
+      if (!name || !phone || !address) {
+        cartFormError.textContent = "Vui lòng nhập đầy đủ thông tin!";
+        return;
+      }
+      if (!/^0\d{9,10}$/.test(phone)) {
+        cartFormError.textContent = "Số điện thoại không hợp lệ!";
+        return;
+      }
+      // Hiện xác nhận đơn hàng
+      const cart = getCart();
+      const selected = getSelected();
+      let selectedBooks = cart.filter((item,i)=>selected[i]);
+      let msg = `<div style="margin-bottom:10px;">Bạn đã đặt mua:</div><ul style="text-align:left;max-height:120px;overflow:auto;padding-left:18px;">`;
+      let total = 0;
+      selectedBooks.forEach(item=>{
+        msg += `<li>${item.title} (${item.qty} cuốn)</li>`;
+        total += item.price * item.qty;
+      });
+      msg += `</ul>
+      <div style="margin-top:10px;font-weight:700;">Tổng tiền: ${total.toLocaleString('vi-VN')}₫</div>
+      <div style="margin-top:10px;">
+        <b>Khách hàng:</b> ${name}<br>
+        <b>Điện thoại:</b> ${phone}<br>
+        <b>Địa chỉ:</b> ${address}
+      </div>
+      <div style="margin-top:10px;">Cảm ơn bạn đã mua sách tại DINO Book Store!</div>`;
+      cartPopupMsg.innerHTML = msg;
+      cartFormPopup.style.display = "none";
+      cartPopupSuccess.style.display = "";
+    };
+    cartPopupClose.onclick = function() {
+      cartPopupOverlay.classList.remove('active');
+      document.body.style.overflow = '';
+    };
+    window.addEventListener('DOMContentLoaded', renderCart);
+  </script>
+</body>
+</html>

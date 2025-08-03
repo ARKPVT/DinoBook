@@ -697,8 +697,6 @@
       .book-card { min-height: 220px; }
       .genre-books-list { max-width: 100%; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
     }
-
-    /* FOOTER */
     .dino-footer {
       width: 100%;
       background: linear-gradient(90deg, #ffecd2 0%, #fcb69f 100%);
@@ -791,6 +789,152 @@
       .dino-footer .footer-social a { width: 32px; height: 32px; font-size: 1.1rem; }
       .dino-footer .footer-copy { font-size: 0.93rem; }
     }
+    /* --- CSS MODAL CHI TIẾT SÁCH --- */
+    .book-modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(30,30,30,0.25);
+      z-index: 99999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.3s;
+      opacity: 0;
+      pointer-events: none;
+    }
+    .book-modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .book-modal {
+      background: #fff;
+      border-radius: 18px;
+      box-shadow: 0 8px 48px #ff7e3f44, 0 2px 12px #ffecd244;
+      max-width: 600px;
+      width: 95vw;
+      padding: 0;
+      overflow: hidden;
+      animation: modalIn 0.4s cubic-bezier(.4,2,.6,1);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+    @keyframes modalIn {
+      from { transform: translateY(60px) scale(0.95); opacity: 0; }
+      to { transform: translateY(0) scale(1); opacity: 1; }
+    }
+    .book-modal-header {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      padding: 28px 28px 18px 28px;
+      background: linear-gradient(90deg, #ffecd2 0%, #fcb69f 100%);
+      border-bottom: 1.5px solid #ffecd2;
+    }
+    .book-modal-cover {
+      width: 120px;
+      height: 170px;
+      border-radius: 12px;
+      object-fit: cover;
+      box-shadow: 0 4px 24px #ff7e3f22;
+      background: #eee;
+      flex-shrink: 0;
+    }
+    .book-modal-title {
+      font-size: 1.45rem;
+      font-weight: 800;
+      color: #1a3d2f;
+      margin-bottom: 6px;
+      line-height: 1.2;
+    }
+    .book-modal-author {
+      font-size: 1.08rem;
+      color: #ff7e3f;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .book-modal-genre {
+      display: inline-block;
+      background: #ffecd2cc;
+      color: #ff7e3f;
+      font-size: 0.98rem;
+      font-weight: 600;
+      border-radius: 8px;
+      padding: 3px 12px;
+      margin-top: 4px;
+      margin-bottom: 0;
+      letter-spacing: 0.2px;
+      box-shadow: 0 2px 8px #fff8;
+    }
+    .book-modal-close {
+      position: absolute;
+      top: 14px;
+      right: 18px;
+      font-size: 1.5rem;
+      color: #ff7e3f;
+      background: none;
+      border: none;
+      cursor: pointer;
+      z-index: 2;
+      transition: color 0.2s;
+    }
+    .book-modal-close:hover { color: #e05d1f; }
+    .book-modal-body {
+      padding: 18px 28px 24px 28px;
+      color: #333;
+      font-size: 1.08rem;
+      line-height: 1.5;
+    }
+    .book-modal-price {
+      font-size: 1.18rem;
+      color: #e05d1f;
+      font-weight: 800;
+      margin-top: 10px;
+      margin-bottom: 10px;
+      letter-spacing: 0.5px;
+    }
+    .book-modal-addcart {
+      background: #ff7e3f;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 12px 28px;
+      font-size: 1.08rem;
+      cursor: pointer;
+      margin-top: 12px;
+      transition: background 0.2s;
+      display: inline-block;
+      font-weight: 700;
+      box-shadow: 0 2px 8px #ffecd244;
+    }
+    .book-modal-addcart:hover { background: #e05d1f; }
+    @media (max-width: 600px) {
+      .book-modal-header, .book-modal-body { padding: 14px 10px 10px 10px; }
+      .book-modal-cover { width: 80px; height: 110px; }
+      .book-modal { max-width: 99vw; }
+    }
+    .toast {
+      position: fixed;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #ff7e3f;
+      color: #fff;
+      padding: 14px 32px;
+      border-radius: 24px;
+      font-size: 1.08rem;
+      font-weight: 700;
+      box-shadow: 0 4px 24px #ff7e3f44;
+      z-index: 999999;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s, bottom 0.4s;
+    }
+    .toast.show {
+      opacity: 1;
+      pointer-events: auto;
+      bottom: 54px;
+    }
   </style>
 </head>
 <body>
@@ -807,10 +951,10 @@
       </form>
       <button class="menu-toggle" aria-label="Mở menu"><i class="fa fa-bars"></i></button>
       <ul class="nav-links">
-        <li><a href="#"><i class="fa fa-home"></i>Trang chủ</a></li>
-        <li><a href="#"><i class="fa fa-book"></i>Giới thiệu</a></li>
-        <li><a href="#"><i class="fa fa-phone"></i>Liên hệ</a></li>
-        <li><a href="#"><i class="fa fa-shopping-cart"></i>Giỏ hàng</a></li>
+        <li><a href="index.html"><i class="fa fa-home"></i>Trang chủ</a></li>
+        <li><a href="web/GioiThieu.html"><i class="fa fa-book"></i>Giới thiệu</a></li>
+        <li><a href="web/lienhe.html"><i class="fa fa-phone"></i>Liên hệ</a></li>
+        <li><a href="web/giohang.html"><i class="fa fa-shopping-cart"></i>Giỏ hàng</a></li>
         <li>
           <button class="nav-btn" tabindex="0"><i class="fa fa-user"></i>Tài khoản <i class="fa fa-caret-down"></i></button>
           <div class="dropdown">
@@ -878,367 +1022,516 @@
       </div>
     </div>
   </footer>
+  <!-- MODAL CHI TIẾT SÁCH -->
+  <div class="book-modal-overlay" id="bookModalOverlay">
+    <div class="book-modal" id="bookModal">
+      <button class="book-modal-close" id="bookModalClose" aria-label="Đóng">&times;</button>
+      <div class="book-modal-header">
+        <img class="book-modal-cover" id="modalBookCover" src="" alt="">
+        <div>
+          <div class="book-modal-title" id="modalBookTitle"></div>
+          <div class="book-modal-author" id="modalBookAuthor"></div>
+          <div class="book-modal-genre" id="modalBookGenre"></div>
+          <div class="book-modal-price" id="modalBookPrice"></div>
+        </div>
+      </div>
+      <div class="book-modal-body" id="modalBookDesc"></div>
+      <button class="book-modal-addcart" id="modalAddCartBtn"><i class="fa fa-cart-plus"></i> Thêm vào giỏ hàng</button>
+    </div>
+  </div>
+  <!-- TOAST THÔNG BÁO -->
+  <div class="toast" id="toast"></div>
   <script>
-    // MENU NAVIGATION JS
-    const menuToggle = document.querySelector('.main-nav .menu-toggle');
-    const navLinks = document.querySelector('.main-nav .nav-links');
-    menuToggle.onclick = () => {
-      navLinks.classList.toggle('open');
-    };
-    document.querySelectorAll('.main-nav .nav-btn').forEach(btn => {
-      btn.onclick = (e) => {
-        e.preventDefault();
-        document.querySelectorAll('.main-nav ul.nav-links li').forEach(li => {
-          if (li !== btn.parentElement) li.classList.remove('open');
-        });
-        btn.parentElement.classList.toggle('open');
-      };
-      document.addEventListener('click', function(ev) {
-        if (!btn.parentElement.contains(ev.target)) {
-          btn.parentElement.classList.remove('open');
-        }
-      });
+    // ================== DỮ LIỆU SÁCH ==================
+const books = [
+  {
+    title: "The Wild Woman's Way",
+    author: "Michaela Boehm",
+    cover: "https://covers.openlibrary.org/b/id/10523338-L.jpg",
+    content: `
+      <h2>The Wild Woman's Way</h2>
+      <p><b>Tác giả:</b> Michaela Boehm</p>
+      <p>Unlock Your Full Potential for Pleasure, Power, and Fulfillment. Một cuốn sách truyền cảm hứng giúp bạn khám phá sức mạnh và sự tự do nội tại của chính mình.</p>
+    `,
+    genre: "ngontinh",
+    price: 120000
+  },
+  {
+    title: "See What I Have Done",
+    author: "Sarah Schmidt",
+    cover: "https://covers.openlibrary.org/b/id/8231996-L.jpg",
+    content: `
+      <h2>See What I Have Done</h2>
+      <p><b>Tác giả:</b> Sarah Schmidt</p>
+      <p>Một tiểu thuyết tâm lý tội phạm dựa trên vụ án nổi tiếng Lizzie Borden, đưa bạn vào hành trình khám phá sự thật và những bí ẩn đen tối.</p>
+    `,
+    genre: "trinhtham",
+    price: 135000
+  },
+  {
+    title: "The Familiars",
+    author: "Stacey Halls",
+    cover: "https://covers.openlibrary.org/b/id/10523337-L.jpg",
+    content: `
+      <h2>The Familiars</h2>
+      <p><b>Tác giả:</b> Stacey Halls</p>
+      <p>Một câu chuyện lịch sử hấp dẫn về tình bạn, phép thuật và sự kiên cường của phụ nữ trong thời kỳ săn phù thủy ở Anh quốc.</p>
+    `,
+    genre: "huyenhuyen",
+    price: 99000
+  },
+  {
+    title: "Atomic Habits",
+    author: "James Clear",
+    cover: "https://covers.openlibrary.org/b/id/9250225-L.jpg",
+    content: `
+      <h2>Atomic Habits</h2>
+      <p><b>Tác giả:</b> James Clear</p>
+      <p>Cuốn sách nổi tiếng về xây dựng thói quen nhỏ để tạo nên thành công lớn, giúp bạn thay đổi cuộc sống từng bước một cách bền vững.</p>
+    `,
+    genre: "vientuong",
+    price: 150000
+  },
+  {
+    title: "Ikigai: The Japanese Secret to a Long and Happy Life",
+    author: "Héctor García & Francesc Miralles",
+    cover: "https://covers.openlibrary.org/b/id/8370226-L.jpg",
+    content: `
+      <h2>Ikigai: The Japanese Secret to a Long and Happy Life</h2>
+      <p><b>Tác giả:</b> Héctor García & Francesc Miralles</p>
+      <p>Khám phá bí quyết sống lâu và hạnh phúc của người Nhật, tìm ra ý nghĩa cuộc sống và động lực mỗi ngày.</p>
+    `,
+    genre: "vientuong",
+    price: 110000
+  }
+];
+const moreBooks = [
+  {
+    title: "Tam Thể",
+    author: "Lưu Từ Hân",
+    cover: "https://covers.openlibrary.org/b/id/10523339-L.jpg",
+    content: `
+      <h2>Tam Thể</h2>
+      <p><b>Tác giả:</b> Lưu Từ Hân</p>
+      <p>Siêu phẩm viễn tưởng về sự tiếp xúc giữa nhân loại và nền văn minh ngoài hành tinh.</p>
+    `,
+    genre: "vientuong",
+    price: 175000
+  },
+  {
+    title: "Sherlock Holmes: Tập Truyện Ngắn",
+    author: "Arthur Conan Doyle",
+    cover: "https://covers.openlibrary.org/b/id/10523340-L.jpg",
+    content: `
+      <h2>Sherlock Holmes: Tập Truyện Ngắn</h2>
+      <p><b>Tác giả:</b> Arthur Conan Doyle</p>
+      <p>Những vụ án trinh thám kinh điển của thám tử lừng danh Sherlock Holmes.</p>
+    `,
+    genre: "trinhtham",
+    price: 98000
+  },
+  {
+    title: "Đấu La Đại Lục",
+    author: "Đường Gia Tam Thiếu",
+    cover: "https://covers.openlibrary.org/b/id/10523341-L.jpg",
+    content: `
+      <h2>Đấu La Đại Lục</h2>
+      <p><b>Tác giả:</b> Đường Gia Tam Thiếu</p>
+      <p>Huyền huyễn, tu luyện, thế giới linh hồn và những trận chiến hấp dẫn.</p>
+    `,
+    genre: "huyenhuyen",
+    price: 125000
+  },
+  {
+    title: "Binh Pháp Tôn Tử",
+    author: "Tôn Vũ",
+    cover: "https://covers.openlibrary.org/b/id/10523342-L.jpg",
+    content: `
+      <h2>Binh Pháp Tôn Tử</h2>
+      <p><b>Tác giả:</b> Tôn Vũ</p>
+      <p>Tác phẩm kinh điển về nghệ thuật quân sự, chiến lược và trí tuệ.</p>
+    `,
+    genre: "quansu",
+    price: 89000
+  },
+  {
+    title: "Hậu Cung Như Ý Truyện",
+    author: "Lưu Liễm Tử",
+    cover: "https://covers.openlibrary.org/b/id/10523343-L.jpg",
+    content: `
+      <h2>Hậu Cung Như Ý Truyện</h2>
+      <p><b>Tác giả:</b> Lưu Liễm Tử</p>
+      <p>Ngôn tình cung đấu, tình yêu và quyền lực trong hậu cung nhà Thanh.</p>
+    `,
+    genre: "ngontinh",
+    price: 112000
+  }
+];
+
+// ================== GENRE DATA ==================
+const genres = [
+  { key: "all", label: "Tất cả", icon: "fa-globe" },
+  { key: "trinhtham", label: "Trinh thám", icon: "fa-user-secret" },
+  { key: "vientuong", label: "Viễn tưởng", icon: "fa-rocket" },
+  { key: "huyenhuyen", label: "Huyền huyễn", icon: "fa-dragon" },
+  { key: "quansu", label: "Quân sự", icon: "fa-shield-halved" },
+  { key: "ngontinh", label: "Ngôn tình", icon: "fa-heart" }
+];
+const genreBooksList = document.getElementById('genreBooksList');
+let currentGenre = "all";
+let searchValue = "";
+const allBooks = books.concat(moreBooks);
+
+// ================== MENU NAVIGATION JS ==================
+const menuToggle = document.querySelector('.main-nav .menu-toggle');
+const navLinks = document.querySelector('.main-nav .nav-links');
+menuToggle.onclick = () => {
+  navLinks.classList.toggle('open');
+};
+document.querySelectorAll('.main-nav .nav-btn').forEach(btn => {
+  btn.onclick = (e) => {
+    e.preventDefault();
+    document.querySelectorAll('.main-nav ul.nav-links li').forEach(li => {
+      if (li !== btn.parentElement) li.classList.remove('open');
     });
-    document.querySelectorAll('.main-nav .nav-links a').forEach(link => {
-      link.onclick = () => {
-        navLinks.classList.remove('open');
-        document.querySelectorAll('.main-nav ul.nav-links li').forEach(li => li.classList.remove('open'));
-      };
+    btn.parentElement.classList.toggle('open');
+  };
+  document.addEventListener('click', function(ev) {
+    if (!btn.parentElement.contains(ev.target)) {
+      btn.parentElement.classList.remove('open');
+    }
+  });
+});
+document.querySelectorAll('.main-nav .nav-links a').forEach(link => {
+  link.onclick = () => {
+    navLinks.classList.remove('open');
+    document.querySelectorAll('.main-nav ul.nav-links li').forEach(li => li.classList.remove('open'));
+  };
+});
+
+// ================== CAROUSEL ==================
+const carousel = document.getElementById('carousel');
+let selectedIdx = 0;
+const bookContent = document.getElementById('book-content');
+const N = books.length;
+let isRotating = false;
+let autoTimeout = null;
+let isAutoPaused = false;
+
+function renderCarousel(animate = true) {
+  const angleStep = 360 / N;
+  const radius = 200;
+  let targetAngle = -selectedIdx * angleStep;
+  carousel.style.transition = animate ? "transform 0.7s cubic-bezier(.4,2,.6,1)" : "none";
+  carousel.style.transform = `rotateY(${targetAngle}deg)`;
+
+  carousel.innerHTML = '';
+  books.forEach((book, idx) => {
+    const angle = idx * angleStep;
+    const bookDiv = document.createElement('div');
+    bookDiv.style.setProperty('--angle', `${angle}deg`);
+    bookDiv.style.setProperty('--radius', `${radius}px`);
+    if (idx === selectedIdx) {
+      bookDiv.className = 'carousel-book selected';
+    } else {
+      bookDiv.className = 'carousel-book not-selected';
+    }
+    bookDiv.innerHTML = `<img src="${book.cover}" alt="${book.title}" title="${book.title}">`;
+    bookDiv.addEventListener('click', () => {
+      if (selectedIdx !== idx && !isRotating) {
+        rotateTo(idx);
+      }
     });
+    carousel.appendChild(bookDiv);
+  });
+}
 
-    // --- Carousel & loading giữ nguyên ---
-    // Chỉ 5 quyển sách cho carousel
-    const books = [
-      {
-        title: "The Wild Woman's Way",
-        author: "Michaela Boehm",
-        cover: "https://covers.openlibrary.org/b/id/10523338-L.jpg",
-        content: `
-          <h2>The Wild Woman's Way</h2>
-          <p><b>Tác giả:</b> Michaela Boehm</p>
-          <p>Unlock Your Full Potential for Pleasure, Power, and Fulfillment. Một cuốn sách truyền cảm hứng giúp bạn khám phá sức mạnh và sự tự do nội tại của chính mình.</p>
-        `,
-        genre: "ngontinh"
-      },
-      {
-        title: "See What I Have Done",
-        author: "Sarah Schmidt",
-        cover: "https://covers.openlibrary.org/b/id/8231996-L.jpg",
-        content: `
-          <h2>See What I Have Done</h2>
-          <p><b>Tác giả:</b> Sarah Schmidt</p>
-          <p>Một tiểu thuyết tâm lý tội phạm dựa trên vụ án nổi tiếng Lizzie Borden, đưa bạn vào hành trình khám phá sự thật và những bí ẩn đen tối.</p>
-        `,
-        genre: "trinhtham"
-      },
-      {
-        title: "The Familiars",
-        author: "Stacey Halls",
-        cover: "https://covers.openlibrary.org/b/id/10523337-L.jpg",
-        content: `
-          <h2>The Familiars</h2>
-          <p><b>Tác giả:</b> Stacey Halls</p>
-          <p>Một câu chuyện lịch sử hấp dẫn về tình bạn, phép thuật và sự kiên cường của phụ nữ trong thời kỳ săn phù thủy ở Anh quốc.</p>
-        `,
-        genre: "huyenhuyen"
-      },
-      {
-        title: "Atomic Habits",
-        author: "James Clear",
-        cover: "https://covers.openlibrary.org/b/id/9250225-L.jpg",
-        content: `
-          <h2>Atomic Habits</h2>
-          <p><b>Tác giả:</b> James Clear</p>
-          <p>Cuốn sách nổi tiếng về xây dựng thói quen nhỏ để tạo nên thành công lớn, giúp bạn thay đổi cuộc sống từng bước một cách bền vững.</p>
-        `,
-        genre: "vientuong"
-      },
-      {
-        title: "Ikigai: The Japanese Secret to a Long and Happy Life",
-        author: "Héctor García & Francesc Miralles",
-        cover: "https://covers.openlibrary.org/b/id/8370226-L.jpg",
-        content: `
-          <h2>Ikigai: The Japanese Secret to a Long and Happy Life</h2>
-          <p><b>Tác giả:</b> Héctor García & Francesc Miralles</p>
-          <p>Khám phá bí quyết sống lâu và hạnh phúc của người Nhật, tìm ra ý nghĩa cuộc sống và động lực mỗi ngày.</p>
-        `,
-        genre: "vientuong"
-      }
-    ];
-
-    // Các sách cho phần thể loại (có thể nhiều hơn 5)
-    const moreBooks = [
-      {
-        title: "Tam Thể",
-        author: "Lưu Từ Hân",
-        cover: "https://covers.openlibrary.org/b/id/10523339-L.jpg",
-        content: `
-          <h2>Tam Thể</h2>
-          <p><b>Tác giả:</b> Lưu Từ Hân</p>
-          <p>Siêu phẩm viễn tưởng về sự tiếp xúc giữa nhân loại và nền văn minh ngoài hành tinh.</p>
-        `,
-        genre: "vientuong"
-      },
-      {
-        title: "Sherlock Holmes: Tập Truyện Ngắn",
-        author: "Arthur Conan Doyle",
-        cover: "https://covers.openlibrary.org/b/id/10523340-L.jpg",
-        content: `
-          <h2>Sherlock Holmes: Tập Truyện Ngắn</h2>
-          <p><b>Tác giả:</b> Arthur Conan Doyle</p>
-          <p>Những vụ án trinh thám kinh điển của thám tử lừng danh Sherlock Holmes.</p>
-        `,
-        genre: "trinhtham"
-      },
-      {
-        title: "Đấu La Đại Lục",
-        author: "Đường Gia Tam Thiếu",
-        cover: "https://covers.openlibrary.org/b/id/10523341-L.jpg",
-        content: `
-          <h2>Đấu La Đại Lục</h2>
-          <p><b>Tác giả:</b> Đường Gia Tam Thiếu</p>
-          <p>Huyền huyễn, tu luyện, thế giới linh hồn và những trận chiến hấp dẫn.</p>
-        `,
-        genre: "huyenhuyen"
-      },
-      {
-        title: "Binh Pháp Tôn Tử",
-        author: "Tôn Vũ",
-        cover: "https://covers.openlibrary.org/b/id/10523342-L.jpg",
-        content: `
-          <h2>Binh Pháp Tôn Tử</h2>
-          <p><b>Tác giả:</b> Tôn Vũ</p>
-          <p>Tác phẩm kinh điển về nghệ thuật quân sự, chiến lược và trí tuệ.</p>
-        `,
-        genre: "quansu"
-      },
-      {
-        title: "Hậu Cung Như Ý Truyện",
-        author: "Lưu Liễm Tử",
-        cover: "https://covers.openlibrary.org/b/id/10523343-L.jpg",
-        content: `
-          <h2>Hậu Cung Như Ý Truyện</h2>
-          <p><b>Tác giả:</b> Lưu Liễm Tử</p>
-          <p>Ngôn tình cung đấu, tình yêu và quyền lực trong hậu cung nhà Thanh.</p>
-        `,
-        genre: "ngontinh"
-      }
-    ];
-
-    // --- Carousel & loading giữ nguyên ---
-    const carousel = document.getElementById('carousel');
-    let selectedIdx = 0;
-    const bookContent = document.getElementById('book-content');
-    const N = books.length;
-    let isRotating = false;
-    let autoTimeout = null;
-    let isAutoPaused = false;
-
-    function renderCarousel(animate = true) {
-      const angleStep = 360 / N;
-      const radius = 200;
-      let targetAngle = -selectedIdx * angleStep;
-      carousel.style.transition = animate ? "transform 0.7s cubic-bezier(.4,2,.6,1)" : "none";
-      carousel.style.transform = `rotateY(${targetAngle}deg)`;
-
-      carousel.innerHTML = '';
-      books.forEach((book, idx) => {
-        const angle = idx * angleStep;
-        const bookDiv = document.createElement('div');
-        bookDiv.style.setProperty('--angle', `${angle}deg`);
-        bookDiv.style.setProperty('--radius', `${radius}px`);
-        if (idx === selectedIdx) {
-          bookDiv.className = 'carousel-book selected';
-        } else {
-          bookDiv.className = 'carousel-book not-selected';
-        }
-        bookDiv.innerHTML = `<img src="${book.cover}" alt="${book.title}" title="${book.title}">`;
-        bookDiv.addEventListener('click', () => {
-          if (selectedIdx !== idx && !isRotating) {
-            rotateTo(idx);
-          }
-        });
-        carousel.appendChild(bookDiv);
-      });
+function fadeInOnceOnScroll() {
+  document.querySelectorAll('.fade-in-once').forEach(el => {
+    if (el.classList.contains('visible')) return;
+    const rect = el.getBoundingClientRect();
+    if (rect.top < window.innerHeight - 60) {
+      el.classList.add('visible');
     }
+  });
+}
+window.addEventListener('scroll', fadeInOnceOnScroll);
 
-    function fadeInOnceOnScroll() {
-      document.querySelectorAll('.fade-in-once').forEach(el => {
-        if (el.classList.contains('visible')) return;
-        const rect = el.getBoundingClientRect();
-        if (rect.top < window.innerHeight - 60) {
-          el.classList.add('visible');
-        }
-      });
-    }
-    window.addEventListener('scroll', fadeInOnceOnScroll);
+function renderBookInfo(fade = true) {
+  const prevHeight = bookContent.offsetHeight;
+  bookContent.style.minHeight = prevHeight + "px";
+  if (fade) {
+    bookContent.classList.remove('fade-in');
+    bookContent.classList.add('fade-out');
+    setTimeout(() => {
+      bookContent.innerHTML = books[selectedIdx].content + `<button class="btn">Xem thêm →</button>`;
+      bookContent.classList.remove('fade-out');
+      bookContent.classList.add('fade-in');
+      setTimeout(() => {
+        bookContent.style.minHeight = "";
+      }, 500);
+    }, 320);
+  } else {
+    bookContent.innerHTML = books[selectedIdx].content + `<button class="btn">Xem thêm →</button>`;
+    bookContent.classList.add('fade-in');
+    setTimeout(() => {
+      bookContent.style.minHeight = "";
+    }, 500);
+  }
+}
 
-    function renderBookInfo(fade = true) {
-      const prevHeight = bookContent.offsetHeight;
-      bookContent.style.minHeight = prevHeight + "px";
-      if (fade) {
-        bookContent.classList.remove('fade-in');
-        bookContent.classList.add('fade-out');
-        setTimeout(() => {
-          bookContent.innerHTML = books[selectedIdx].content + `<button class="btn">Xem thêm →</button>`;
-          bookContent.classList.remove('fade-out');
-          bookContent.classList.add('fade-in');
-          setTimeout(() => {
-            bookContent.style.minHeight = "";
-          }, 500);
-        }, 320);
-      } else {
-        bookContent.innerHTML = books[selectedIdx].content + `<button class="btn">Xem thêm →</button>`;
-        bookContent.classList.add('fade-in');
-        setTimeout(() => {
-          bookContent.style.minHeight = "";
-        }, 500);
-      }
-    }
-
-    function autoRotateStep() {
-      if (isRotating || isAutoPaused) {
-        autoTimeout = setTimeout(autoRotateStep, 400);
-        return;
-      }
-      isRotating = true;
-      selectedIdx = (selectedIdx + 1) % N;
+function autoRotateStep() {
+  if (isRotating || isAutoPaused) {
+    autoTimeout = setTimeout(autoRotateStep, 400);
+    return;
+  }
+  isRotating = true;
+  selectedIdx = (selectedIdx + 1) % N;
+  renderCarousel(true);
+  renderBookInfo(true);
+  carousel.addEventListener('transitionend', onAutoTransitionEnd, { once: true });
+}
+function onAutoTransitionEnd() {
+  isRotating = false;
+  if (!isAutoPaused) autoTimeout = setTimeout(autoRotateStep, 2600);
+}
+function startAutoRotate() {
+  isAutoPaused = false;
+  if (!autoTimeout) autoTimeout = setTimeout(autoRotateStep, 2600);
+}
+function stopAutoRotate() {
+  isAutoPaused = true;
+  if (autoTimeout) clearTimeout(autoTimeout);
+  autoTimeout = null;
+}
+carousel.parentElement.onmouseenter = stopAutoRotate;
+carousel.parentElement.onmouseleave = startAutoRotate;
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) stopAutoRotate();
+  else startAutoRotate();
+});
+function rotateTo(targetIdx) {
+  if (isRotating) return;
+  isRotating = true;
+  stopAutoRotate();
+  let current = selectedIdx;
+  let diff = (targetIdx - current + N) % N;
+  let step = diff > N / 2 ? -1 : 1;
+  let steps = Math.abs(diff > N / 2 ? diff - N : diff);
+  let count = 0;
+  function nextStep() {
+    if (count < steps) {
+      current = (current + step + N) % N;
+      selectedIdx = current;
       renderCarousel(true);
       renderBookInfo(true);
-      carousel.addEventListener('transitionend', onAutoTransitionEnd, { once: true });
-    }
-    function onAutoTransitionEnd() {
+      count++;
+      setTimeout(nextStep, 180);
+    } else {
+      selectedIdx = targetIdx;
+      renderCarousel(true);
+      renderBookInfo(true);
       isRotating = false;
-      if (!isAutoPaused) autoTimeout = setTimeout(autoRotateStep, 2600);
-    }
-    function startAutoRotate() {
-      isAutoPaused = false;
-      if (!autoTimeout) autoTimeout = setTimeout(autoRotateStep, 2600);
-    }
-    function stopAutoRotate() {
-      isAutoPaused = true;
-      if (autoTimeout) clearTimeout(autoTimeout);
-      autoTimeout = null;
-    }
-    carousel.parentElement.onmouseenter = stopAutoRotate;
-    carousel.parentElement.onmouseleave = startAutoRotate;
-    document.addEventListener('visibilitychange', () => {
-      if (document.hidden) stopAutoRotate();
-      else startAutoRotate();
-    });
-    function rotateTo(targetIdx) {
-      if (isRotating) return;
-      isRotating = true;
-      stopAutoRotate();
-      let current = selectedIdx;
-      let diff = (targetIdx - current + N) % N;
-      let step = diff > N / 2 ? -1 : 1;
-      let steps = Math.abs(diff > N / 2 ? diff - N : diff);
-      let count = 0;
-      function nextStep() {
-        if (count < steps) {
-          current = (current + step + N) % N;
-          selectedIdx = current;
-          renderCarousel(true);
-          renderBookInfo(true);
-          count++;
-          setTimeout(nextStep, 180);
-        } else {
-          selectedIdx = targetIdx;
-          renderCarousel(true);
-          renderBookInfo(true);
-          isRotating = false;
-          startAutoRotate();
-        }
-      }
-      nextStep();
-    }
-
-    // --- Thể loại sách & tìm kiếm ---
-    const genres = [
-      { key: "all", label: "Tất cả", icon: "fa-globe" },
-      { key: "trinhtham", label: "Trinh thám", icon: "fa-user-secret" },
-      { key: "vientuong", label: "Viễn tưởng", icon: "fa-rocket" },
-      { key: "huyenhuyen", label: "Huyền huyễn", icon: "fa-dragon" },
-      { key: "quansu", label: "Quân sự", icon: "fa-shield-halved" },
-      { key: "ngontinh", label: "Ngôn tình", icon: "fa-heart" }
-    ];
-    const genreBooksList = document.getElementById('genreBooksList');
-    let currentGenre = "all";
-    let searchValue = "";
-
-    // Gộp tất cả sách cho phần thể loại
-    const allBooks = books.concat(moreBooks);
-
-    function renderGenreBooks() {
-      let filtered = allBooks.filter(book => {
-        let matchGenre = (currentGenre === "all" || book.genre === currentGenre);
-        let matchSearch = (
-          !searchValue ||
-          book.title.toLowerCase().includes(searchValue) ||
-          book.author.toLowerCase().includes(searchValue)
-        );
-        return matchGenre && matchSearch;
-      });
-      genreBooksList.innerHTML = "";
-      if (filtered.length === 0) {
-        genreBooksList.innerHTML = `<div style="grid-column:1/-1;text-align:center;color:#ff7e3f;font-size:1.2rem;padding:32px 0;">Không tìm thấy sách phù hợp.</div>`;
-        return;
-      }
-      filtered.forEach((book, i) => {
-        let genreObj = genres.find(g => g.key === book.genre);
-        let genreLabel = genreObj ? genreObj.label : "";
-        let genreIcon = genreObj ? genreObj.icon : "";
-        let card = document.createElement('div');
-        card.className = "book-card";
-        card.tabIndex = 0;
-        card.style.animationDelay = (i * 0.08) + "s";
-        card.innerHTML = `
-          <img class="book-cover" src="${book.cover}" alt="${book.title}">
-          <div class="book-info">
-            <div class="book-title">${book.title}</div>
-            <div class="book-author"><i class="fa fa-user"></i> ${book.author}</div>
-            <div class="book-desc">${book.content.replace(/<[^>]+>/g, '').slice(0, 80)}...</div>
-            <span class="book-genre"><i class="fa ${genreIcon}"></i> ${genreLabel}</span>
-            <button class="book-more" tabindex="0">Xem chi tiết</button>
-          </div>
-        `;
-        card.querySelector('.book-more').onclick = () => {
-          alert(`Chi tiết sách: ${book.title}\nTác giả: ${book.author}`);
-        };
-        genreBooksList.appendChild(card);
-      });
-    }
-
-    document.querySelectorAll('.genre-tab').forEach(tab => {
-      tab.onclick = function() {
-        document.querySelectorAll('.genre-tab').forEach(t => t.classList.remove('active'));
-        this.classList.add('active');
-        currentGenre = this.getAttribute('data-genre');
-        renderGenreBooks();
-      };
-    });
-
-    document.getElementById('searchInput').addEventListener('input', function() {
-      searchValue = this.value.trim().toLowerCase();
-      renderGenreBooks();
-    });
-
-    window.addEventListener('DOMContentLoaded', () => {
-      setTimeout(() => {
-        document.getElementById('overlay-loading').classList.add('hide');
-        setTimeout(() => {
-          document.getElementById('overlay-loading').style.display = 'none';
-          document.querySelector('.container').style.opacity = 1;
-          fadeInOnceOnScroll();
-        }, 700);
-      }, 1200);
-
-      renderCarousel(false);
-      renderBookInfo(false);
       startAutoRotate();
-      renderGenreBooks();
+    }
+  }
+  nextStep();
+}
+
+// ================== MODAL CHI TIẾT SÁCH ==================
+const bookModalOverlay = document.getElementById('bookModalOverlay');
+const bookModal = document.getElementById('bookModal');
+const bookModalClose = document.getElementById('bookModalClose');
+const modalBookCover = document.getElementById('modalBookCover');
+const modalBookTitle = document.getElementById('modalBookTitle');
+const modalBookAuthor = document.getElementById('modalBookAuthor');
+const modalBookGenre = document.getElementById('modalBookGenre');
+const modalBookPrice = document.getElementById('modalBookPrice');
+const modalBookDesc = document.getElementById('modalBookDesc');
+const modalAddCartBtn = document.getElementById('modalAddCartBtn');
+let currentModalBook = null;
+
+function showBookModal(book) {
+  currentModalBook = book;
+  modalBookCover.src = book.cover;
+  modalBookCover.alt = book.title;
+  modalBookTitle.textContent = book.title;
+  modalBookAuthor.innerHTML = `<i class="fa fa-user"></i> ${book.author}`;
+  let genreObj = genres.find(g => g.key === book.genre);
+  modalBookGenre.innerHTML = genreObj ? `<i class="fa ${genreObj.icon}"></i> ${genreObj.label}` : "";
+  modalBookPrice.textContent = "Giá: " + book.price.toLocaleString('vi-VN') + "₫";
+  modalBookDesc.innerHTML = book.content;
+  bookModalOverlay.classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+function hideBookModal() {
+  bookModalOverlay.classList.remove('active');
+  document.body.style.overflow = '';
+  currentModalBook = null;
+}
+bookModalClose.onclick = hideBookModal;
+bookModalOverlay.onclick = function(e) {
+  if (e.target === bookModalOverlay) hideBookModal();
+};
+document.addEventListener('keydown', function(e) {
+  if (bookModalOverlay.classList.contains('active') && e.key === 'Escape') hideBookModal();
+});
+
+// ================== GIỎ HÀNG ==================
+function getCart() {
+  try {
+    return JSON.parse(localStorage.getItem('cart')) || [];
+  } catch { return []; }
+}
+function setCart(cart) {
+  localStorage.setItem('cart', JSON.stringify(cart));
+}
+function addToCart(book) {
+  let cart = getCart();
+  let idx = cart.findIndex(item => item.title === book.title && item.author === book.author);
+  if (idx >= 0) {
+    cart[idx].qty += 1;
+  } else {
+    cart.push({ ...book, qty: 1 });
+  }
+  setCart(cart);
+  showToast(`Đã thêm "${book.title}" vào giỏ hàng!`);
+}
+// Toast thông báo
+const toast = document.getElementById('toast');
+function showToast(msg) {
+  toast.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 1800);
+}
+
+// ================== HIỂN THỊ SÁCH THEO THỂ LOẠI ==================
+function renderGenreBooks() {
+  let filtered = allBooks.filter(book => {
+    let matchGenre = (currentGenre === "all" || book.genre === currentGenre);
+    let matchSearch = (
+      !searchValue ||
+      book.title.toLowerCase().includes(searchValue) ||
+      book.author.toLowerCase().includes(searchValue)
+    );
+    return matchGenre && matchSearch;
+  });
+  genreBooksList.innerHTML = "";
+  if (filtered.length === 0) {
+    genreBooksList.innerHTML = `<div style="grid-column:1/-1;text-align:center;color:#ff7e3f;font-size:1.2rem;padding:32px 0;">Không tìm thấy sách phù hợp.</div>`;
+    return;
+  }
+  filtered.forEach((book, i) => {
+    let genreObj = genres.find(g => g.key === book.genre);
+    let genreLabel = genreObj ? genreObj.label : "";
+    let genreIcon = genreObj ? genreObj.icon : "";
+    let card = document.createElement('div');
+    card.className = "book-card";
+    card.tabIndex = 0;
+    card.style.animationDelay = (i * 0.08) + "s";
+    card.innerHTML = `
+      <img class="book-cover" src="${book.cover}" alt="${book.title}">
+      <div class="book-info">
+        <div class="book-title">${book.title}</div>
+        <div class="book-author"><i class="fa fa-user"></i> ${book.author}</div>
+        <div class="book-desc">${book.content.replace(/<[^>]+>/g, '').slice(0, 80)}...</div>
+        <span class="book-genre"><i class="fa ${genreIcon}"></i> ${genreLabel}</span>
+        <div class="book-modal-price" style="margin:8px 0 0 0;">${book.price.toLocaleString('vi-VN')}₫</div>
+        <button class="book-more" tabindex="0"><i class="fa fa-cart-plus"></i> Thêm vào giỏ hàng</button>
+      </div>
+    `;
+    // Khi click vào thẻ sách (trừ nút thêm giỏ)
+    card.addEventListener('click', function(e) {
+      if (e.target.classList.contains('book-more')) return;
+      showBookModal(book);
     });
+    // Khi click nút thêm vào giỏ hàng
+    card.querySelector('.book-more').onclick = (ev) => {
+      ev.stopPropagation();
+      addToCart(book);
+    };
+    genreBooksList.appendChild(card);
+  });
+}
+
+// Nút thêm vào giỏ hàng trong modal
+modalAddCartBtn.onclick = function() {
+  if (currentModalBook) addToCart(currentModalBook);
+};
+
+// ================== TAB THỂ LOẠI & TÌM KIẾM ==================
+document.querySelectorAll('.genre-tab').forEach(tab => {
+  tab.onclick = function() {
+    document.querySelectorAll('.genre-tab').forEach(t => t.classList.remove('active'));
+    this.classList.add('active');
+    currentGenre = this.getAttribute('data-genre');
+    renderGenreBooks();
+  };
+});
+document.getElementById('searchInput').addEventListener('input', function() {
+  searchValue = this.value.trim().toLowerCase();
+  renderGenreBooks();
+});
+
+// ================== HIỂN THỊ TÊN NGƯỜI DÙNG Ở MENU TÀI KHOẢN ==================
+function updateAccountMenu() {
+  const tenNguoiDung = localStorage.getItem('tenNguoiDung');
+  const tenDangNhap = localStorage.getItem('tenDangNhap');
+  const navBtn = document.querySelector('.main-nav .nav-btn');
+  const dropdown = navBtn?.parentElement.querySelector('.dropdown');
+  if (!navBtn || !dropdown) return;
+
+  if (tenNguoiDung && tenNguoiDung.trim() !== "") {
+    navBtn.innerHTML = `<i class="fa fa-user"></i> ${tenNguoiDung} <i class="fa fa-caret-down"></i>`;
+    dropdown.querySelectorAll('a').forEach(a => {
+      if (a.href.includes('dangnhap') || a.href.includes('dangky')) {
+        a.style.display = 'none';
+      } else {
+        a.style.display = '';
+      }
+    });
+  } else {
+    navBtn.innerHTML = `<i class="fa fa-user"></i> Tài khoản <i class="fa fa-caret-down"></i>`;
+    dropdown.querySelectorAll('a').forEach(a => {
+      if (a.href.includes('dangnhap') || a.href.includes('dangky')) {
+        a.style.display = '';
+      } else {
+        a.style.display = 'none';
+      }
+    });
+  }
+}
+document.addEventListener('DOMContentLoaded', function() {
+  updateAccountMenu();
+  document.querySelectorAll('.main-nav .dropdown a').forEach(a => {
+    if (a.textContent.includes('Đăng xuất')) {
+      a.addEventListener('click', function(e) {
+        e.preventDefault();
+        localStorage.removeItem('tenNguoiDung');
+        localStorage.removeItem('tenDangNhap');
+        updateAccountMenu();
+        window.location.reload();
+      });
+    }
+  });
+});
+
+// ================== KHỞI TẠO ==================
+window.addEventListener('DOMContentLoaded', () => {
+  setTimeout(() => {
+    document.getElementById('overlay-loading').classList.add('hide');
+    setTimeout(() => {
+      document.getElementById('overlay-loading').style.display = 'none';
+      document.querySelector('.container').style.opacity = 1;
+      fadeInOnceOnScroll();
+    }, 700);
+  }, 1200);
+
+  renderCarousel(false);
+  renderBookInfo(false);
+  startAutoRotate();
+  renderGenreBooks();
+});
   </script>
 </body>
 </html>

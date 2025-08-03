@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
   <style>
+    /* ... giữ nguyên toàn bộ CSS như bạn gửi ... */
     html, body {
       height: 100%;
       margin: 0;
@@ -294,7 +295,7 @@
     function validateEmail(email) {
       return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     }
-    document.getElementById('loginForm').onsubmit = function(e) {
+    document.getElementById('loginForm').onsubmit = async function(e) {
       e.preventDefault();
       var ok = true;
       var email = document.getElementById('loginEmail').value.trim();
@@ -316,21 +317,32 @@
       }
       var btn = document.getElementById('loginBtn');
       btn.classList.add('loading');
-      // Demo: user: admin hoặc admin@gmail.com, pass: 123456
-      setTimeout(function(){
+      try {
+        const res = await fetch('https://dino-api-99qm.onrender.com/api/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ loginEmail: email, loginPassword: pass })
+        });
+        const data = await res.json();
         btn.classList.remove('loading');
-        if ((email === "admin" || email === "admin@gmail.com") && pass === "123456") {
+        if (data.success) {
+          // Lưu tên đăng nhập và tên người dùng vào localStorage
+          localStorage.setItem('tenDangNhap', data.tenDangNhap || '');
+          localStorage.setItem('tenNguoiDung', data.tenNguoiDung || '');
           document.getElementById('loginForm').style.display = 'none';
           document.getElementById('loginSuccess').style.display = 'block';
           setTimeout(function(){
             window.location.href = "../index.html";
           }, 2000);
         } else {
-          document.getElementById('errLoginPassword').textContent = 'Tên đăng nhập hoặc mật khẩu không đúng.';
+          document.getElementById('errLoginPassword').textContent = data.message || 'Tên đăng nhập hoặc mật khẩu không đúng.';
           document.querySelector('.login-container').style.animation = 'shake 0.3s';
           setTimeout(()=>{document.querySelector('.login-container').style.animation='';},350);
         }
-      }, 1000);
+      } catch (err) {
+        btn.classList.remove('loading');
+        document.getElementById('errLoginPassword').textContent = 'Không thể kết nối máy chủ. Vui lòng thử lại.';
+      }
       return false;
     };
   </script>
