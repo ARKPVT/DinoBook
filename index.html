@@ -1,1537 +1,1690 @@
 <!DOCTYPE html>
 <html lang="vi">
-<head>
-  <meta charset="UTF-8">
-  <title>Dino Book Store - 3D Carousel Ultimate</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-  <style>
-    body {
-      font-family: 'Segoe UI', Arial, sans-serif;
-      margin: 0;
-      background: #f8f8f8;
-      overflow-x: hidden;
-    }
-    .main-nav {
-      width: 100%;
-      background: linear-gradient(90deg, #ffecd2 0%, #fcb69f 100%);
-      box-shadow: 0 2px 16px #ff7e3f11;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      font-family: inherit;
-      transition: box-shadow 0.3s;
-    }
-    .main-nav .nav-container {
-      max-width: 1200px;
-      margin: 0 auto;
-      display: flex;
-      align-items: center;
-      padding: 0 24px;
-      height: 64px;
-      justify-content: space-between;
-    }
-    .main-nav .logo {
-      font-size: 2rem;
-      font-weight: 900;
-      color: #ff7e3f;
-      letter-spacing: 1px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      text-shadow: 0 2px 8px #fff8;
-      user-select: none;
-    }
-    .main-nav .logo .fa-book-open { color: #1a3d2f; }
-    .main-nav ul.nav-links {
-      list-style: none;
-      display: flex;
-      gap: 18px;
-      align-items: center;
-      margin: 0;
-      padding: 0;
-    }
-    .main-nav ul.nav-links li {
-      position: relative;
-    }
-    .main-nav ul.nav-links li a,
-    .main-nav ul.nav-links li .nav-btn {
-      text-decoration: none;
-      color: #1a3d2f;
-      font-weight: 600;
-      font-size: 1.08rem;
-      padding: 8px 16px;
-      border-radius: 6px;
-      transition: background 0.18s, color 0.18s;
-      display: flex;
-      align-items: center;
-      gap: 7px;
-      cursor: pointer;
-      background: none;
-      border: none;
-      outline: none;
-    }
-    .main-nav ul.nav-links li a:hover,
-    .main-nav ul.nav-links li .nav-btn:hover {
-      background: #ff7e3f22;
-      color: #ff7e3f;
-    }
-    .main-nav .dropdown {
-      position: absolute;
-      top: 110%;
-      left: 0;
-      min-width: 170px;
-      background: #fff;
-      border-radius: 10px;
-      box-shadow: 0 8px 32px 0 rgba(255,126,63,0.13);
-      opacity: 0;
-      pointer-events: none;
-      transform: translateY(10px) scale(0.98);
-      transition: all 0.25s cubic-bezier(.4,2,.6,1);
-      z-index: 10;
-    }
-    .main-nav ul.nav-links li:hover > .dropdown,
-    .main-nav ul.nav-links li:focus-within > .dropdown,
-    .main-nav ul.nav-links li.open > .dropdown {
-      opacity: 1;
-      pointer-events: auto;
-      transform: translateY(0) scale(1);
-    }
-    .main-nav .dropdown a {
-      color: #1a3d2f;
-      padding: 12px 18px;
-      display: block;
-      border-radius: 8px;
-      font-size: 1rem;
-      font-weight: 500;
-      transition: background 0.18s, color 0.18s;
-    }
-    .main-nav .dropdown a:hover {
-      background: #ffecd2;
-      color: #ff7e3f;
-    }
-    .main-nav .menu-toggle {
-      display: none;
-      font-size: 1.7rem;
-      background: none;
-      border: none;
-      color: #ff7e3f;
-      cursor: pointer;
-      margin-left: 12px;
-    }
-    .main-nav .search-bar {
-      position: relative;
-      margin-left: 24px;
-      flex: 1;
-      max-width: 320px;
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-    }
-    .main-nav .search-bar input {
-      width: 100%;
-      padding: 8px 38px 8px 16px;
-      border-radius: 24px;
-      border: 1.5px solid #ffb347;
-      font-size: 1rem;
-      background: #fff;
-      transition: box-shadow 0.2s, border 0.2s;
-      outline: none;
-      box-shadow: 0 2px 8px #ffecd244;
-    }
-    .main-nav .search-bar input:focus {
-      border: 2px solid #ff7e3f;
-      box-shadow: 0 4px 16px #ffb34733;
-    }
-    .main-nav .search-bar .fa-search {
-      position: absolute;
-      right: 14px;
-      color: #ff7e3f;
-      font-size: 1.1rem;
-      pointer-events: none;
-      top: 50%;
-      transform: translateY(-50%);
-      opacity: 0.7;
-    }
-    @media (max-width: 900px) {
-      .main-nav .nav-container { padding: 0 10px; }
-      .main-nav ul.nav-links {
-        position: fixed;
-        top: 64px;
-        left: 0;
-        right: 0;
-        background: #fff;
-        flex-direction: column;
-        gap: 0;
-        box-shadow: 0 8px 32px 0 rgba(255,126,63,0.13);
-        border-radius: 0 0 18px 18px;
-        overflow: hidden;
-        max-height: 0;
-        transition: max-height 0.35s cubic-bezier(.4,2,.6,1);
-        z-index: 99;
+  <head>
+    <meta charset="UTF-8" />
+    <title>Dino Book Store - 3D Carousel Ultimate</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+    />
+    <style>
+      body {
+        font-family: "Segoe UI", Arial, sans-serif;
+        margin: 0;
+        background: #f8f8f8;
+        overflow-x: hidden;
       }
-      .main-nav ul.nav-links.open {
-        max-height: 420px;
-        transition: max-height 0.45s cubic-bezier(.4,2,.6,1);
+      .main-nav {
+        width: 100%;
+        background: linear-gradient(90deg, #ffecd2 0%, #fcb69f 100%);
+        box-shadow: 0 2px 16px #ff7e3f11;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        font-family: inherit;
+        transition: box-shadow 0.3s;
+      }
+      .main-nav .nav-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        padding: 0 24px;
+        height: 64px;
+        justify-content: space-between;
+      }
+      .main-nav .logo {
+        font-size: 2rem;
+        font-weight: 900;
+        color: #ff7e3f;
+        letter-spacing: 1px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        text-shadow: 0 2px 8px #fff8;
+        user-select: none;
+      }
+      .main-nav .logo .fa-book-open {
+        color: #1a3d2f;
+      }
+      .main-nav ul.nav-links {
+        list-style: none;
+        display: flex;
+        gap: 18px;
+        align-items: center;
+        margin: 0;
+        padding: 0;
       }
       .main-nav ul.nav-links li {
-        width: 100%;
+        position: relative;
       }
       .main-nav ul.nav-links li a,
       .main-nav ul.nav-links li .nav-btn {
-        width: 100%;
-        justify-content: flex-start;
-        padding: 14px 24px;
+        text-decoration: none;
+        color: #1a3d2f;
+        font-weight: 600;
         font-size: 1.08rem;
-        border-radius: 0;
+        padding: 8px 16px;
+        border-radius: 6px;
+        transition: background 0.18s, color 0.18s;
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        cursor: pointer;
+        background: none;
+        border: none;
+        outline: none;
+      }
+      .main-nav ul.nav-links li a:hover,
+      .main-nav ul.nav-links li .nav-btn:hover {
+        background: #ff7e3f22;
+        color: #ff7e3f;
       }
       .main-nav .dropdown {
-        position: static;
-        box-shadow: none;
-        background: #f8f8f8;
-        border-radius: 0;
-        transform: none;
+        position: absolute;
+        top: 110%;
+        left: 0;
+        min-width: 170px;
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 8px 32px 0 rgba(255, 126, 63, 0.13);
+        opacity: 0;
+        pointer-events: none;
+        transform: translateY(10px) scale(0.98);
+        transition: all 0.25s cubic-bezier(0.4, 2, 0.6, 1);
+        z-index: 10;
+      }
+      .main-nav ul.nav-links li:hover > .dropdown,
+      .main-nav ul.nav-links li:focus-within > .dropdown,
+      .main-nav ul.nav-links li.open > .dropdown {
         opacity: 1;
         pointer-events: auto;
-        min-width: unset;
-        display: none;
+        transform: translateY(0) scale(1);
       }
-      .main-nav ul.nav-links li.open > .dropdown {
+      .main-nav .dropdown a {
+        color: #1a3d2f;
+        padding: 12px 18px;
         display: block;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-weight: 500;
+        transition: background 0.18s, color 0.18s;
+      }
+      .main-nav .dropdown a:hover {
+        background: #ffecd2;
+        color: #ff7e3f;
       }
       .main-nav .menu-toggle {
-        display: block;
+        display: none;
+        font-size: 1.7rem;
+        background: none;
+        border: none;
+        color: #ff7e3f;
+        cursor: pointer;
+        margin-left: 12px;
       }
       .main-nav .search-bar {
-        max-width: 100%;
-        margin: 12px 0 0 0;
+        position: relative;
+        margin-left: 24px;
+        flex: 1;
+        max-width: 320px;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+      }
+      .main-nav .search-bar input {
         width: 100%;
-        padding: 0 10px;
+        padding: 8px 38px 8px 16px;
+        border-radius: 24px;
+        border: 1.5px solid #ffb347;
+        font-size: 1rem;
+        background: #fff;
+        transition: box-shadow 0.2s, border 0.2s;
+        outline: none;
+        box-shadow: 0 2px 8px #ffecd244;
       }
-    }
-    #overlay-loading {
-      position: fixed;
-      z-index: 9999;
-      inset: 0;
-      background: linear-gradient(120deg, #ffecd2 0%, #fcb69f 100%);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      transition: opacity 0.7s cubic-bezier(.4,2,.6,1);
-    }
-    #overlay-loading.hide {
-      opacity: 0;
-      pointer-events: none;
-    }
-    .dino-logo {
-      font-size: 3.5rem;
-      margin-bottom: 18px;
-      filter: drop-shadow(0 2px 8px #ff7e3f44);
-      animation: dino-bounce 1.2s infinite alternate cubic-bezier(.4,2,.6,1);
-    }
-    @keyframes dino-bounce {
-      to { transform: translateY(-12px) scale(1.08);}
-    }
-    .loading-text {
-      font-size: 1.3rem;
-      color: #ff7e3f;
-      font-weight: 700;
-      letter-spacing: 1.5px;
-      margin-bottom: 10px;
-      text-shadow: 0 2px 8px #fff8;
-    }
-    .loading-bar {
-      width: 80px;
-      height: 6px;
-      background: #fff;
-      border-radius: 3px;
-      overflow: hidden;
-      position: relative;
-      margin-top: 8px;
-    }
-    .loading-bar-inner {
-      width: 0;
-      height: 100%;
-      background: linear-gradient(90deg, #ff7e3f 40%, #ffb347 100%);
-      border-radius: 3px;
-      animation: loading-bar-move 1.2s linear forwards;
-    }
-    @keyframes loading-bar-move {
-      to { width: 100%; }
-    }
-    .container {
-      display: flex;
-      max-width: 1200px;
-      margin: 60px auto;
-      background: #fff;
-      border-radius: 16px;
-      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
-      overflow: hidden;
-    }
-    .left {
-      flex: 2;
-      padding: 48px 32px;
-      min-height: 400px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
-    .right {
-      flex: 1.2;
-      background: #f3f7f6;
-      padding: 32px 16px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-width: 380px;
-      position: relative;
-    }
-    .carousel-container {
-      perspective: 1200px;
-      width: 320px;
-      height: 380px;
-      position: relative;
-      margin: 0 auto;
-      margin-top: 20px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .carousel {
-      width: 100%;
-      height: 100%;
-      position: absolute;
-      top: 0; left: 0;
-      transform-style: preserve-3d;
-      transition: transform 0.7s cubic-bezier(.4,2,.6,1);
-    }
-    .carousel-book {
-      position: absolute;
-      width: 140px;
-      height: 210px;
-      left: 50%; top: 50%;
-      transform-style: preserve-3d;
-      box-shadow: 0 8px 32px 0 rgba(255,126,63,0.18), 0 2px 12px rgba(0,0,0,0.12);
-      border-radius: 12px;
-      background: #fff;
-      cursor: pointer;
-      transition: 
-        box-shadow 0.4s, 
-        filter 0.4s, 
-        border 0.3s,
-        opacity 0.4s,
-        transform 0.7s cubic-bezier(.4,2,.6,1),
-        z-index 0.4s,
-        scale 0.7s cubic-bezier(.4,2,.6,1);
-      border: 3px solid transparent;
-      filter: grayscale(30%) blur(0.5px) brightness(0.95);
-      opacity: 0.7;
-      z-index: 1;
-      display: flex;
-      align-items: flex-end;
-      overflow: hidden;
-      will-change: transform, opacity;
-    }
-    .carousel-book.selected {
-      box-shadow: 0 12px 40px 0 rgba(255,126,63,0.28), 0 2px 12px rgba(0,0,0,0.16);
-      border: 3px solid #ff7e3f;
-      filter: none;
-      opacity: 1;
-      z-index: 10;
-      width: 160px;
-      height: 240px;
-      transform: translate(-50%, -50%) rotateY(var(--angle)) translateZ(var(--radius)) scale(1.22);
-    }
-    .carousel-book.not-selected {
-      opacity: 0.55;
-      filter: grayscale(40%) blur(0.5px) brightness(0.93);
-      z-index: 1;
-      width: 140px;
-      height: 210px;
-      transform: translate(-50%, -50%) rotateY(var(--angle)) translateZ(var(--radius)) scale(0.85);
-    }
-    .carousel-book img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      border-radius: 10px;
-      display: block;
-      background: #eee;
-    }
-    .fade-in-once {
-      opacity: 0;
-      transform: translateY(30px) scale(0.98);
-      transition: opacity 0.7s cubic-bezier(.4,2,.6,1), transform 0.7s cubic-bezier(.4,2,.6,1);
-      will-change: opacity, transform;
-    }
-    .fade-in-once.visible {
-      opacity: 1;
-      transform: translateY(0) scale(1);
-    }
-    .fade-in-once.delay1 { transition-delay: 0.2s; }
-    .fade-in-once.delay2 { transition-delay: 0.45s; }
-    .fade-in-once.delay3 { transition-delay: 0.7s; }
-    .book-content-fancy {
-      margin-top: 32px;
-      min-height: 180px;
-      position: relative;
-      opacity: 1;
-      transition: opacity 0.45s cubic-bezier(.4,2,.6,1);
-      will-change: opacity;
-    }
-    .book-content-fancy.fade-out {
-      opacity: 0;
-      transition: opacity 0.32s cubic-bezier(.4,2,.6,1);
-    }
-    .book-content-fancy.fade-in {
-      opacity: 1;
-      transition: opacity 0.45s cubic-bezier(.4,2,.6,1);
-    }
-    .main-title {
-      font-size: 2.7rem;
-      font-weight: 800;
-      line-height: 1.15;
-      margin-bottom: 0.2em;
-      letter-spacing: 0.5px;
-      color: #1a3d2f;
-      text-shadow: 0 2px 12px rgba(255,126,63,0.08), 0 1px 0 #fff;
-      position: relative;
-      z-index: 1;
-    }
-    .main-title .dino {
-      font-size: 1.2em;
-      vertical-align: middle;
-      margin-right: 0.15em;
-      filter: drop-shadow(0 2px 2px #ff7e3f33);
-    }
-    .main-title .highlight {
-      color: #fff;
-      background: linear-gradient(90deg, #ff7e3f 40%, #ffb347 100%);
-      border-radius: 8px;
-      padding: 0 10px 2px 10px;
-      box-shadow: 0 2px 8px #ff7e3f22;
-      display: inline-block;
-      margin-left: 6px;
-      font-weight: 900;
-      letter-spacing: 1px;
-      text-shadow: 0 2px 8px #ff7e3f33;
-    }
-    .main-desc {
-      font-size: 1.2rem;
-      color: #444;
-      margin-bottom: 0.5em;
-      min-height: 1.5em;
-      font-weight: 500;
-      letter-spacing: 0.2px;
-    }
-    .btn {
-      background: #ff7e3f;
-      color: #fff;
-      border: none;
-      border-radius: 6px;
-      padding: 12px 28px;
-      font-size: 1rem;
-      cursor: pointer;
-      margin-top: 32px;
-      transition: background 0.2s;
-      display: inline-block;
-    }
-    .btn:hover {
-      background: #e05d1f;
-    }
-    .genre-tabs {
-      display: flex;
-      justify-content: center;
-      gap: 18px;
-      margin: 48px auto 0 auto;
-      max-width: 1200px;
-      flex-wrap: wrap;
-      z-index: 2;
-      position: relative;
-    }
-    .genre-tab {
-      background: #fff;
-      border-radius: 24px;
-      padding: 12px 32px 12px 24px;
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: #1a3d2f;
-      box-shadow: 0 2px 12px #ff7e3f11;
-      border: 2px solid #ffecd2;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      transition: 
-        background 0.25s cubic-bezier(.4,2,.6,1),
-        color 0.18s,
-        border 0.25s cubic-bezier(.4,2,.6,1),
-        box-shadow 0.25s;
-      position: relative;
-      overflow: hidden;
-      outline: none;
-    }
-    .genre-tab.active, .genre-tab:hover {
-      background: linear-gradient(90deg, #ffecd2 0%, #fcb69f 100%);
-      color: #ff7e3f;
-      border: 2px solid #ffb347;
-      box-shadow: 0 4px 24px #ffb34722;
-    }
-    .genre-tab .fa {
-      font-size: 1.3em;
-      filter: drop-shadow(0 2px 4px #ff7e3f22);
-      transition: color 0.2s;
-    }
-    .genre-books-section {
-      max-width: 1200px;
-      margin: 32px auto 64px auto;
-      padding: 0 16px;
-      min-height: 320px;
-      position: relative;
-      z-index: 1;
-      background: rgba(255, 255, 255, 0.45);
-      box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.10);
-      border-radius: 24px;
-      backdrop-filter: blur(6px) saturate(1.2);
-      border: 1.5px solid rgba(255, 255, 255, 0.25);
-      overflow: hidden;
-    }
-    .genre-books-section:before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(120deg, rgba(255,236,210,0.18) 0%, rgba(252,182,159,0.13) 100%);
-      pointer-events: none;
-      z-index: 0;
-    }
-    .genre-books-list {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-      gap: 32px;
-      margin-top: 24px;
-      align-items: stretch;
-      position: relative;
-      z-index: 1;
-      max-width: 1100px;
-      justify-content: center;
-      margin-left: auto;
-      margin-right: auto;
-    }
-    @media (min-width: 1100px) {
-      .genre-books-list {
-        grid-template-columns: repeat(5, 1fr);
+      .main-nav .search-bar input:focus {
+        border: 2px solid #ff7e3f;
+        box-shadow: 0 4px 16px #ffb34733;
       }
-    }
-    .book-card {
-      position: relative;
-      border-radius: 18px;
-      box-shadow: 0 8px 32px #ff7e3f22, 0 2px 12px #ffecd244;
-      overflow: hidden;
-      min-height: 320px;
-      border: 4px solid #fff6f2;
-      background: none;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-end;
-      cursor: pointer;
-      transition: 
-        transform 0.35s cubic-bezier(.4,2,.6,1), 
-        box-shadow 0.35s cubic-bezier(.4,2,.6,1),
-        border 0.25s cubic-bezier(.4,2,.6,1),
-        filter 0.25s cubic-bezier(.4,2,.6,1);
-      opacity: 0;
-      animation: fadeInBookCard 0.7s cubic-bezier(.4,2,.6,1) forwards;
-      will-change: transform, box-shadow, filter;
-    }
-    @keyframes fadeInBookCard {
-      to {
+      .main-nav .search-bar .fa-search {
+        position: absolute;
+        right: 14px;
+        color: #ff7e3f;
+        font-size: 1.1rem;
+        pointer-events: none;
+        top: 50%;
+        transform: translateY(-50%);
+        opacity: 0.7;
+      }
+      @media (max-width: 900px) {
+        .main-nav .nav-container {
+          padding: 0 10px;
+        }
+        .main-nav ul.nav-links {
+          position: fixed;
+          top: 64px;
+          left: 0;
+          right: 0;
+          background: #fff;
+          flex-direction: column;
+          gap: 0;
+          box-shadow: 0 8px 32px 0 rgba(255, 126, 63, 0.13);
+          border-radius: 0 0 18px 18px;
+          overflow: hidden;
+          max-height: 0;
+          transition: max-height 0.35s cubic-bezier(0.4, 2, 0.6, 1);
+          z-index: 99;
+        }
+        .main-nav ul.nav-links.open {
+          max-height: 420px;
+          transition: max-height 0.45s cubic-bezier(0.4, 2, 0.6, 1);
+        }
+        .main-nav ul.nav-links li {
+          width: 100%;
+        }
+        .main-nav ul.nav-links li a,
+        .main-nav ul.nav-links li .nav-btn {
+          width: 100%;
+          justify-content: flex-start;
+          padding: 14px 24px;
+          font-size: 1.08rem;
+          border-radius: 0;
+        }
+        .main-nav .dropdown {
+          position: static;
+          box-shadow: none;
+          background: #f8f8f8;
+          border-radius: 0;
+          transform: none;
+          opacity: 1;
+          pointer-events: auto;
+          min-width: unset;
+          display: none;
+        }
+        .main-nav ul.nav-links li.open > .dropdown {
+          display: block;
+        }
+        .main-nav .menu-toggle {
+          display: block;
+        }
+        .main-nav .search-bar {
+          max-width: 100%;
+          margin: 12px 0 0 0;
+          width: 100%;
+          padding: 0 10px;
+        }
+      }
+      #overlay-loading {
+        position: fixed;
+        z-index: 9999;
+        inset: 0;
+        background: linear-gradient(120deg, #ffecd2 0%, #fcb69f 100%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        transition: opacity 0.7s cubic-bezier(0.4, 2, 0.6, 1);
+      }
+      #overlay-loading.hide {
+        opacity: 0;
+        pointer-events: none;
+      }
+      .dino-logo {
+        font-size: 3.5rem;
+        margin-bottom: 18px;
+        filter: drop-shadow(0 2px 8px #ff7e3f44);
+        animation: dino-bounce 1.2s infinite alternate
+          cubic-bezier(0.4, 2, 0.6, 1);
+      }
+      @keyframes dino-bounce {
+        to {
+          transform: translateY(-12px) scale(1.08);
+        }
+      }
+      .loading-text {
+        font-size: 1.3rem;
+        color: #ff7e3f;
+        font-weight: 700;
+        letter-spacing: 1.5px;
+        margin-bottom: 10px;
+        text-shadow: 0 2px 8px #fff8;
+      }
+      .loading-bar {
+        width: 80px;
+        height: 6px;
+        background: #fff;
+        border-radius: 3px;
+        overflow: hidden;
+        position: relative;
+        margin-top: 8px;
+      }
+      .loading-bar-inner {
+        width: 0;
+        height: 100%;
+        background: linear-gradient(90deg, #ff7e3f 40%, #ffb347 100%);
+        border-radius: 3px;
+        animation: loading-bar-move 1.2s linear forwards;
+      }
+      @keyframes loading-bar-move {
+        to {
+          width: 100%;
+        }
+      }
+      .container {
+        display: flex;
+        max-width: 1200px;
+        margin: 60px auto;
+        background: #fff;
+        border-radius: 16px;
+        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+        overflow: hidden;
+      }
+      .left {
+        flex: 2;
+        padding: 48px 32px;
+        min-height: 400px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+      .right {
+        flex: 1.2;
+        background: #f3f7f6;
+        padding: 32px 16px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-width: 380px;
+        position: relative;
+      }
+      .carousel-container {
+        perspective: 1200px;
+        width: 320px;
+        height: 380px;
+        position: relative;
+        margin: 0 auto;
+        margin-top: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .carousel {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        transform-style: preserve-3d;
+        transition: transform 0.7s cubic-bezier(0.4, 2, 0.6, 1);
+      }
+      .carousel-book {
+        position: absolute;
+        width: 140px;
+        height: 210px;
+        left: 50%;
+        top: 50%;
+        transform-style: preserve-3d;
+        box-shadow: 0 8px 32px 0 rgba(255, 126, 63, 0.18),
+          0 2px 12px rgba(0, 0, 0, 0.12);
+        border-radius: 12px;
+        background: #fff;
+        cursor: pointer;
+        transition: box-shadow 0.4s, filter 0.4s, border 0.3s, opacity 0.4s,
+          transform 0.7s cubic-bezier(0.4, 2, 0.6, 1), z-index 0.4s,
+          scale 0.7s cubic-bezier(0.4, 2, 0.6, 1);
+        border: 3px solid transparent;
+        filter: grayscale(30%) blur(0.5px) brightness(0.95);
+        opacity: 0.7;
+        z-index: 1;
+        display: flex;
+        align-items: flex-end;
+        overflow: hidden;
+        will-change: transform, opacity;
+      }
+      .carousel-book.selected {
+        box-shadow: 0 12px 40px 0 rgba(255, 126, 63, 0.28),
+          0 2px 12px rgba(0, 0, 0, 0.16);
+        border: 3px solid #ff7e3f;
+        filter: none;
         opacity: 1;
-        transform: translateY(0) scale(1) perspective(600px) rotateY(0deg);
+        z-index: 10;
+        width: 160px;
+        height: 240px;
+        transform: translate(-50%, -50%) rotateY(var(--angle))
+          translateZ(var(--radius)) scale(1.22);
       }
-    }
-    .book-card:hover, .book-card:focus-within {
-      transform: translateY(-18px) scale(1.045) perspective(600px) rotateY(-7deg) rotateX(2deg);
-      box-shadow: 0 24px 64px #ff7e3f44, 0 8px 32px #ffecd288;
-      border: 4px solid #ffb347;
-      z-index: 2;
-      filter: brightness(1.04) saturate(1.08);
-    }
-    .book-card::before {
-      content: "";
-      position: absolute;
-      left: -60%;
-      top: 0;
-      width: 60%;
-      height: 100%;
-      background: linear-gradient(120deg, rgba(255,255,255,0.0) 0%, rgba(255,255,255,0.18) 60%, rgba(255,255,255,0.0) 100%);
-      transform: skewX(-18deg);
-      transition: left 0.7s cubic-bezier(.4,2,.6,1);
-      pointer-events: none;
-      z-index: 3;
-    }
-    .book-card:hover::before, .book-card:focus-within::before {
-      left: 110%;
-      transition: left 0.7s cubic-bezier(.4,2,.6,1);
-    }
-    .book-card::after {
-      content: "";
-      position: absolute;
-      left: 10%;
-      right: 10%;
-      bottom: -18px;
-      height: 28px;
-      border-radius: 50%;
-      background: radial-gradient(ellipse at center, #ffecd2cc 0%, #ffecd200 80%);
-      opacity: 0.7;
-      filter: blur(2.5px);
-      z-index: 1;
-      pointer-events: none;
-      transition: opacity 0.3s;
-    }
-    .book-card:hover::after, .book-card:focus-within::after {
-      opacity: 1;
-      background: radial-gradient(ellipse at center, #ffb347cc 0%, #ffecd200 80%);
-    }
-    .book-cover {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: center center;
-      display: block;
-      border-radius: 14px;
-      background: none;
-      flex: 1 1 auto;
-      transition: 
-        filter 0.25s cubic-bezier(.4,2,.6,1),
-        transform 0.35s cubic-bezier(.4,2,.6,1);
-    }
-    .book-card:hover .book-cover, .book-card:focus-within .book-cover {
-      filter: brightness(1.12) saturate(1.12) drop-shadow(0 4px 16px #ffb34744);
-      transform: scale(1.07) translateY(-4px) rotateZ(-1deg);
-    }
-    .book-card .book-info {
-      position: absolute;
-      left: 0; right: 0; bottom: 0;
-      padding: 20px 18px 16px 18px;
-      background: rgba(255,255,255,0.92);
-      border-radius: 0 0 14px 14px;
-      box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.10);
-      backdrop-filter: blur(8px) saturate(1.2);
-      z-index: 4;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      opacity: 0;
-      pointer-events: none;
-      transform: translateY(30px) scale(0.98);
-      transition:
-        opacity 0.38s cubic-bezier(.4,2,.6,1),
-        transform 0.38s cubic-bezier(.4,2,.6,1),
-        filter 0.38s cubic-bezier(.4,2,.6,1);
-      filter: blur(4px);
-    }
-    .book-card:hover .book-info,
-    .book-card:focus-within .book-info {
-      opacity: 1;
-      pointer-events: auto;
-      transform: translateY(0) scale(1);
-      filter: blur(0);
-    }
-    .book-card .book-title {
-      font-size: 1.13rem;
-      font-weight: 700;
-      color: #1a3d2f;
-      margin-bottom: 2px;
-      line-height: 1.2;
-      min-height: 2.2em;
-      text-shadow: 0 2px 8px #fff8;
-    }
-    .book-card .book-author {
-      font-size: 0.98rem;
-      color: #ff7e3f;
-      font-weight: 600;
-      margin-bottom: 4px;
-      text-shadow: 0 2px 8px #fff8;
-    }
-    .book-card .book-desc {
-      font-size: 0.97rem;
-      color: #444;
-      margin-bottom: 0;
-      flex: 1;
-      line-height: 1.4;
-      text-shadow: 0 2px 8px #fff8;
-    }
-    .book-card .book-genre {
-      display: inline-block;
-      background: #ffecd2cc;
-      color: #ff7e3f;
-      font-size: 0.92rem;
-      font-weight: 600;
-      border-radius: 8px;
-      padding: 3px 12px;
-      margin-top: 8px;
-      margin-bottom: 0;
-      letter-spacing: 0.2px;
-      box-shadow: 0 2px 8px #fff8;
-    }
-    .book-card .book-more {
-      background: #ff7e3f;
-      color: #fff;
-      border: none;
-      border-radius: 6px;
-      padding: 7px 18px;
-      font-size: 0.98rem;
-      cursor: pointer;
-      margin-top: 12px;
-      transition: background 0.2s;
-      display: inline-block;
-      font-weight: 600;
-      box-shadow: 0 2px 8px #ffecd244;
-    }
-    .book-card .book-more:hover {
-      background: #e05d1f;
-    }
-    @media (max-width: 900px) {
-      .book-card { min-height: 220px; }
-      .genre-books-list { max-width: 100%; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
-    }
-    .dino-footer {
-      width: 100%;
-      background: linear-gradient(90deg, #ffecd2 0%, #fcb69f 100%);
-      box-shadow: 0 -2px 24px #ff7e3f22;
-      padding: 0;
-      margin: 0;
-      position: relative;
-      z-index: 10;
-      overflow: hidden;
-    }
-    .dino-footer .footer-content {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 32px 16px 18px 16px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-    }
-    .dino-footer .footer-logo {
-      font-size: 1.7rem;
-      font-weight: 900;
-      color: #ff7e3f;
-      letter-spacing: 1px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 12px;
-      text-shadow: 0 2px 16px #fff8, 0 1px 0 #fff;
-      filter: drop-shadow(0 2px 8px #ff7e3f33);
-      user-select: none;
-      background: linear-gradient(90deg, #ff7e3f 40%, #ffb347 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-    .dino-footer .footer-dino {
-      font-size: 2.1rem;
-      filter: drop-shadow(0 2px 8px #ffb34788);
-      animation: dino-footer-bounce 1.2s infinite alternate cubic-bezier(.4,2,.6,1);
-    }
-    @keyframes dino-footer-bounce {
-      to { transform: translateY(-7px) scale(1.08);}
-    }
-    .dino-footer .footer-social {
-      display: flex;
-      gap: 22px;
-      margin-bottom: 14px;
-    }
-    .dino-footer .footer-social a {
-      color: #ff7e3f;
-      font-size: 1.35rem;
-      background: #fff6f2;
-      border-radius: 50%;
-      width: 38px;
-      height: 38px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 2px 12px #ffecd244;
-      transition: 
-        background 0.25s cubic-bezier(.4,2,.6,1),
-        color 0.18s,
-        box-shadow 0.25s,
-        transform 0.18s;
-      position: relative;
-      overflow: hidden;
-    }
-    .dino-footer .footer-social a:hover {
-      background: linear-gradient(90deg, #ffecd2 0%, #fcb69f 100%);
-      color: #fff;
-      box-shadow: 0 4px 24px #ffb34744, 0 2px 12px #ffecd244;
-      transform: translateY(-4px) scale(1.13) rotateZ(-4deg);
-      text-shadow: 0 2px 8px #ff7e3f88;
-    }
-    .dino-footer .footer-copy {
-      font-size: 1rem;
-      color: #ff7e3f;
-      font-weight: 600;
-      letter-spacing: 0.5px;
-      margin-top: 2px;
-      text-shadow: 0 2px 8px #fff8;
-      opacity: 0.85;
-      text-align: center;
-    }
-    @media (max-width: 600px) {
-      .dino-footer .footer-content { padding: 22px 4px 10px 4px; }
-      .dino-footer .footer-logo { font-size: 1.1rem; }
-      .dino-footer .footer-social a { width: 32px; height: 32px; font-size: 1.1rem; }
-      .dino-footer .footer-copy { font-size: 0.93rem; }
-    }
-    /* --- CSS MODAL CHI TIẾT SÁCH --- */
-    .book-modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(30,30,30,0.25);
-      z-index: 99999;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: opacity 0.3s;
-      opacity: 0;
-      pointer-events: none;
-    }
-    .book-modal-overlay.active {
-      opacity: 1;
-      pointer-events: auto;
-    }
-    .book-modal {
-      background: #fff;
-      border-radius: 18px;
-      box-shadow: 0 8px 48px #ff7e3f44, 0 2px 12px #ffecd244;
-      max-width: 600px;
-      width: 95vw;
-      padding: 0;
-      overflow: hidden;
-      animation: modalIn 0.4s cubic-bezier(.4,2,.6,1);
-      position: relative;
-      display: flex;
-      flex-direction: column;
-    }
-    @keyframes modalIn {
-      from { transform: translateY(60px) scale(0.95); opacity: 0; }
-      to { transform: translateY(0) scale(1); opacity: 1; }
-    }
-    .book-modal-header {
-      display: flex;
-      align-items: center;
-      gap: 18px;
-      padding: 28px 28px 18px 28px;
-      background: linear-gradient(90deg, #ffecd2 0%, #fcb69f 100%);
-      border-bottom: 1.5px solid #ffecd2;
-    }
-    .book-modal-cover {
-      width: 120px;
-      height: 170px;
-      border-radius: 12px;
-      object-fit: cover;
-      box-shadow: 0 4px 24px #ff7e3f22;
-      background: #eee;
-      flex-shrink: 0;
-    }
-    .book-modal-title {
-      font-size: 1.45rem;
-      font-weight: 800;
-      color: #1a3d2f;
-      margin-bottom: 6px;
-      line-height: 1.2;
-    }
-    .book-modal-author {
-      font-size: 1.08rem;
-      color: #ff7e3f;
-      font-weight: 600;
-      margin-bottom: 4px;
-    }
-    .book-modal-genre {
-      display: inline-block;
-      background: #ffecd2cc;
-      color: #ff7e3f;
-      font-size: 0.98rem;
-      font-weight: 600;
-      border-radius: 8px;
-      padding: 3px 12px;
-      margin-top: 4px;
-      margin-bottom: 0;
-      letter-spacing: 0.2px;
-      box-shadow: 0 2px 8px #fff8;
-    }
-    .book-modal-close {
-      position: absolute;
-      top: 14px;
-      right: 18px;
-      font-size: 1.5rem;
-      color: #ff7e3f;
-      background: none;
-      border: none;
-      cursor: pointer;
-      z-index: 2;
-      transition: color 0.2s;
-    }
-    .book-modal-close:hover { color: #e05d1f; }
-    .book-modal-body {
-      padding: 18px 28px 24px 28px;
-      color: #333;
-      font-size: 1.08rem;
-      line-height: 1.5;
-    }
-    .book-modal-price {
-      font-size: 1.18rem;
-      color: #e05d1f;
-      font-weight: 800;
-      margin-top: 10px;
-      margin-bottom: 10px;
-      letter-spacing: 0.5px;
-    }
-    .book-modal-addcart {
-      background: #ff7e3f;
-      color: #fff;
-      border: none;
-      border-radius: 6px;
-      padding: 12px 28px;
-      font-size: 1.08rem;
-      cursor: pointer;
-      margin-top: 12px;
-      transition: background 0.2s;
-      display: inline-block;
-      font-weight: 700;
-      box-shadow: 0 2px 8px #ffecd244;
-    }
-    .book-modal-addcart:hover { background: #e05d1f; }
-    @media (max-width: 600px) {
-      .book-modal-header, .book-modal-body { padding: 14px 10px 10px 10px; }
-      .book-modal-cover { width: 80px; height: 110px; }
-      .book-modal { max-width: 99vw; }
-    }
-    .toast {
-      position: fixed;
-      bottom: 32px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: #ff7e3f;
-      color: #fff;
-      padding: 14px 32px;
-      border-radius: 24px;
-      font-size: 1.08rem;
-      font-weight: 700;
-      box-shadow: 0 4px 24px #ff7e3f44;
-      z-index: 999999;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.4s, bottom 0.4s;
-    }
-    .toast.show {
-      opacity: 1;
-      pointer-events: auto;
-      bottom: 54px;
-    }
-  </style>
-</head>
-<body>
-  <!-- MENU NAVIGATION -->
-  <nav class="main-nav">
-    <div class="nav-container">
-      <div class="logo">
-        <i class="fa-solid fa-book-open"></i>
-        DINO <span style="color:#1a3d2f;">Book</span>
+      .carousel-book.not-selected {
+        opacity: 0.55;
+        filter: grayscale(40%) blur(0.5px) brightness(0.93);
+        z-index: 1;
+        width: 140px;
+        height: 210px;
+        transform: translate(-50%, -50%) rotateY(var(--angle))
+          translateZ(var(--radius)) scale(0.85);
+      }
+      .carousel-book img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 10px;
+        display: block;
+        background: #eee;
+      }
+      .fade-in-once {
+        opacity: 0;
+        transform: translateY(30px) scale(0.98);
+        transition: opacity 0.7s cubic-bezier(0.4, 2, 0.6, 1),
+          transform 0.7s cubic-bezier(0.4, 2, 0.6, 1);
+        will-change: opacity, transform;
+      }
+      .fade-in-once.visible {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+      .fade-in-once.delay1 {
+        transition-delay: 0.2s;
+      }
+      .fade-in-once.delay2 {
+        transition-delay: 0.45s;
+      }
+      .fade-in-once.delay3 {
+        transition-delay: 0.7s;
+      }
+      .book-content-fancy {
+        margin-top: 32px;
+        min-height: 180px;
+        position: relative;
+        opacity: 1;
+        transition: opacity 0.45s cubic-bezier(0.4, 2, 0.6, 1);
+        will-change: opacity;
+      }
+      .book-content-fancy.fade-out {
+        opacity: 0;
+        transition: opacity 0.32s cubic-bezier(0.4, 2, 0.6, 1);
+      }
+      .book-content-fancy.fade-in {
+        opacity: 1;
+        transition: opacity 0.45s cubic-bezier(0.4, 2, 0.6, 1);
+      }
+      .main-title {
+        font-size: 2.7rem;
+        font-weight: 800;
+        line-height: 1.15;
+        margin-bottom: 0.2em;
+        letter-spacing: 0.5px;
+        color: #1a3d2f;
+        text-shadow: 0 2px 12px rgba(255, 126, 63, 0.08), 0 1px 0 #fff;
+        position: relative;
+        z-index: 1;
+      }
+      .main-title .dino {
+        font-size: 1.2em;
+        vertical-align: middle;
+        margin-right: 0.15em;
+        filter: drop-shadow(0 2px 2px #ff7e3f33);
+      }
+      .main-title .highlight {
+        color: #fff;
+        background: linear-gradient(90deg, #ff7e3f 40%, #ffb347 100%);
+        border-radius: 8px;
+        padding: 0 10px 2px 10px;
+        box-shadow: 0 2px 8px #ff7e3f22;
+        display: inline-block;
+        margin-left: 6px;
+        font-weight: 900;
+        letter-spacing: 1px;
+        text-shadow: 0 2px 8px #ff7e3f33;
+      }
+      .main-desc {
+        font-size: 1.2rem;
+        color: #444;
+        margin-bottom: 0.5em;
+        min-height: 1.5em;
+        font-weight: 500;
+        letter-spacing: 0.2px;
+      }
+      .btn {
+        background: #ff7e3f;
+        color: #fff;
+        border: none;
+        border-radius: 6px;
+        padding: 12px 28px;
+        font-size: 1rem;
+        cursor: pointer;
+        margin-top: 32px;
+        transition: background 0.2s;
+        display: inline-block;
+      }
+      .btn:hover {
+        background: #e05d1f;
+      }
+      .genre-tabs {
+        display: flex;
+        justify-content: center;
+        gap: 18px;
+        margin: 48px auto 0 auto;
+        max-width: 1200px;
+        flex-wrap: wrap;
+        z-index: 2;
+        position: relative;
+      }
+      .genre-tab {
+        background: #fff;
+        border-radius: 24px;
+        padding: 12px 32px 12px 24px;
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #1a3d2f;
+        box-shadow: 0 2px 12px #ff7e3f11;
+        border: 2px solid #ffecd2;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        transition: background 0.25s cubic-bezier(0.4, 2, 0.6, 1), color 0.18s,
+          border 0.25s cubic-bezier(0.4, 2, 0.6, 1), box-shadow 0.25s;
+        position: relative;
+        overflow: hidden;
+        outline: none;
+      }
+      .genre-tab.active,
+      .genre-tab:hover {
+        background: linear-gradient(90deg, #ffecd2 0%, #fcb69f 100%);
+        color: #ff7e3f;
+        border: 2px solid #ffb347;
+        box-shadow: 0 4px 24px #ffb34722;
+      }
+      .genre-tab .fa {
+        font-size: 1.3em;
+        filter: drop-shadow(0 2px 4px #ff7e3f22);
+        transition: color 0.2s;
+      }
+      .genre-books-section {
+        max-width: 1200px;
+        margin: 32px auto 64px auto;
+        padding: 0 16px;
+        min-height: 320px;
+        position: relative;
+        z-index: 1;
+        background: rgba(255, 255, 255, 0.45);
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+        border-radius: 24px;
+        backdrop-filter: blur(6px) saturate(1.2);
+        border: 1.5px solid rgba(255, 255, 255, 0.25);
+        overflow: hidden;
+      }
+      .genre-books-section:before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          120deg,
+          rgba(255, 236, 210, 0.18) 0%,
+          rgba(252, 182, 159, 0.13) 100%
+        );
+        pointer-events: none;
+        z-index: 0;
+      }
+      .genre-books-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+        gap: 32px;
+        margin-top: 24px;
+        align-items: stretch;
+        position: relative;
+        z-index: 1;
+        max-width: 1100px;
+        justify-content: center;
+        margin-left: auto;
+        margin-right: auto;
+      }
+      @media (min-width: 1100px) {
+        .genre-books-list {
+          grid-template-columns: repeat(5, 1fr);
+        }
+      }
+      .book-card {
+        position: relative;
+        border-radius: 18px;
+        box-shadow: 0 8px 32px #ff7e3f22, 0 2px 12px #ffecd244;
+        overflow: hidden;
+        min-height: 320px;
+        border: 4px solid #fff6f2;
+        background: none;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        cursor: pointer;
+        transition: transform 0.35s cubic-bezier(0.4, 2, 0.6, 1),
+          box-shadow 0.35s cubic-bezier(0.4, 2, 0.6, 1),
+          border 0.25s cubic-bezier(0.4, 2, 0.6, 1),
+          filter 0.25s cubic-bezier(0.4, 2, 0.6, 1);
+        opacity: 0;
+        animation: fadeInBookCard 0.7s cubic-bezier(0.4, 2, 0.6, 1) forwards;
+        will-change: transform, box-shadow, filter;
+      }
+      @keyframes fadeInBookCard {
+        to {
+          opacity: 1;
+          transform: translateY(0) scale(1) perspective(600px) rotateY(0deg);
+        }
+      }
+      .book-card:hover,
+      .book-card:focus-within {
+        transform: translateY(-18px) scale(1.045) perspective(600px)
+          rotateY(-7deg) rotateX(2deg);
+        box-shadow: 0 24px 64px #ff7e3f44, 0 8px 32px #ffecd288;
+        border: 4px solid #ffb347;
+        z-index: 2;
+        filter: brightness(1.04) saturate(1.08);
+      }
+      .book-card::before {
+        content: "";
+        position: absolute;
+        left: -60%;
+        top: 0;
+        width: 60%;
+        height: 100%;
+        background: linear-gradient(
+          120deg,
+          rgba(255, 255, 255, 0) 0%,
+          rgba(255, 255, 255, 0.18) 60%,
+          rgba(255, 255, 255, 0) 100%
+        );
+        transform: skewX(-18deg);
+        transition: left 0.7s cubic-bezier(0.4, 2, 0.6, 1);
+        pointer-events: none;
+        z-index: 3;
+      }
+      .book-card:hover::before,
+      .book-card:focus-within::before {
+        left: 110%;
+        transition: left 0.7s cubic-bezier(0.4, 2, 0.6, 1);
+      }
+      .book-card::after {
+        content: "";
+        position: absolute;
+        left: 10%;
+        right: 10%;
+        bottom: -18px;
+        height: 28px;
+        border-radius: 50%;
+        background: radial-gradient(
+          ellipse at center,
+          #ffecd2cc 0%,
+          #ffecd200 80%
+        );
+        opacity: 0.7;
+        filter: blur(2.5px);
+        z-index: 1;
+        pointer-events: none;
+        transition: opacity 0.3s;
+      }
+      .book-card:hover::after,
+      .book-card:focus-within::after {
+        opacity: 1;
+        background: radial-gradient(
+          ellipse at center,
+          #ffb347cc 0%,
+          #ffecd200 80%
+        );
+      }
+      .book-cover {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center center;
+        display: block;
+        border-radius: 14px;
+        background: none;
+        flex: 1 1 auto;
+        transition: filter 0.25s cubic-bezier(0.4, 2, 0.6, 1),
+          transform 0.35s cubic-bezier(0.4, 2, 0.6, 1);
+      }
+      .book-card:hover .book-cover,
+      .book-card:focus-within .book-cover {
+        filter: brightness(1.12) saturate(1.12)
+          drop-shadow(0 4px 16px #ffb34744);
+        transform: scale(1.07) translateY(-4px) rotateZ(-1deg);
+      }
+      .book-card .book-info {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        padding: 20px 18px 16px 18px;
+        background: rgba(255, 255, 255, 0.92);
+        border-radius: 0 0 14px 14px;
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+        backdrop-filter: blur(8px) saturate(1.2);
+        z-index: 4;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        opacity: 0;
+        pointer-events: none;
+        transform: translateY(30px) scale(0.98);
+        transition: opacity 0.38s cubic-bezier(0.4, 2, 0.6, 1),
+          transform 0.38s cubic-bezier(0.4, 2, 0.6, 1),
+          filter 0.38s cubic-bezier(0.4, 2, 0.6, 1);
+        filter: blur(4px);
+      }
+      .book-card:hover .book-info,
+      .book-card:focus-within .book-info {
+        opacity: 1;
+        pointer-events: auto;
+        transform: translateY(0) scale(1);
+        filter: blur(0);
+      }
+      .book-card .book-title {
+        font-size: 1.13rem;
+        font-weight: 700;
+        color: #1a3d2f;
+        margin-bottom: 2px;
+        line-height: 1.2;
+        min-height: 2.2em;
+        text-shadow: 0 2px 8px #fff8;
+      }
+      .book-card .book-author {
+        font-size: 0.98rem;
+        color: #ff7e3f;
+        font-weight: 600;
+        margin-bottom: 4px;
+        text-shadow: 0 2px 8px #fff8;
+      }
+      .book-card .book-desc {
+        font-size: 0.97rem;
+        color: #444;
+        margin-bottom: 0;
+        flex: 1;
+        line-height: 1.4;
+        text-shadow: 0 2px 8px #fff8;
+      }
+      .book-card .book-genre {
+        display: inline-block;
+        background: #ffecd2cc;
+        color: #ff7e3f;
+        font-size: 0.92rem;
+        font-weight: 600;
+        border-radius: 8px;
+        padding: 3px 12px;
+        margin-top: 8px;
+        margin-bottom: 0;
+        letter-spacing: 0.2px;
+        box-shadow: 0 2px 8px #fff8;
+      }
+      .book-card .book-more {
+        background: #ff7e3f;
+        color: #fff;
+        border: none;
+        border-radius: 6px;
+        padding: 7px 18px;
+        font-size: 0.98rem;
+        cursor: pointer;
+        margin-top: 12px;
+        transition: background 0.2s;
+        display: inline-block;
+        font-weight: 600;
+        box-shadow: 0 2px 8px #ffecd244;
+      }
+      .book-card .book-more:hover {
+        background: #e05d1f;
+      }
+      @media (max-width: 900px) {
+        .book-card {
+          min-height: 220px;
+        }
+        .genre-books-list {
+          max-width: 100%;
+          grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        }
+      }
+      .dino-footer {
+        width: 100%;
+        background: linear-gradient(90deg, #ffecd2 0%, #fcb69f 100%);
+        box-shadow: 0 -2px 24px #ff7e3f22;
+        padding: 0;
+        margin: 0;
+        position: relative;
+        z-index: 10;
+        overflow: hidden;
+      }
+      .dino-footer .footer-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 32px 16px 18px 16px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+      }
+      .dino-footer .footer-logo {
+        font-size: 1.7rem;
+        font-weight: 900;
+        color: #ff7e3f;
+        letter-spacing: 1px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 12px;
+        text-shadow: 0 2px 16px #fff8, 0 1px 0 #fff;
+        filter: drop-shadow(0 2px 8px #ff7e3f33);
+        user-select: none;
+        background: linear-gradient(90deg, #ff7e3f 40%, #ffb347 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .dino-footer .footer-dino {
+        font-size: 2.1rem;
+        filter: drop-shadow(0 2px 8px #ffb34788);
+        animation: dino-footer-bounce 1.2s infinite alternate
+          cubic-bezier(0.4, 2, 0.6, 1);
+      }
+      @keyframes dino-footer-bounce {
+        to {
+          transform: translateY(-7px) scale(1.08);
+        }
+      }
+      .dino-footer .footer-social {
+        display: flex;
+        gap: 22px;
+        margin-bottom: 14px;
+      }
+      .dino-footer .footer-social a {
+        color: #ff7e3f;
+        font-size: 1.35rem;
+        background: #fff6f2;
+        border-radius: 50%;
+        width: 38px;
+        height: 38px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 2px 12px #ffecd244;
+        transition: background 0.25s cubic-bezier(0.4, 2, 0.6, 1), color 0.18s,
+          box-shadow 0.25s, transform 0.18s;
+        position: relative;
+        overflow: hidden;
+      }
+      .dino-footer .footer-social a:hover {
+        background: linear-gradient(90deg, #ffecd2 0%, #fcb69f 100%);
+        color: #fff;
+        box-shadow: 0 4px 24px #ffb34744, 0 2px 12px #ffecd244;
+        transform: translateY(-4px) scale(1.13) rotateZ(-4deg);
+        text-shadow: 0 2px 8px #ff7e3f88;
+      }
+      .dino-footer .footer-copy {
+        font-size: 1rem;
+        color: #ff7e3f;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        margin-top: 2px;
+        text-shadow: 0 2px 8px #fff8;
+        opacity: 0.85;
+        text-align: center;
+      }
+      @media (max-width: 600px) {
+        .dino-footer .footer-content {
+          padding: 22px 4px 10px 4px;
+        }
+        .dino-footer .footer-logo {
+          font-size: 1.1rem;
+        }
+        .dino-footer .footer-social a {
+          width: 32px;
+          height: 32px;
+          font-size: 1.1rem;
+        }
+        .dino-footer .footer-copy {
+          font-size: 0.93rem;
+        }
+      }
+      /* --- CSS MODAL CHI TIẾT SÁCH --- */
+      .book-modal-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(30, 30, 30, 0.25);
+        z-index: 99999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: opacity 0.3s;
+        opacity: 0;
+        pointer-events: none;
+      }
+      .book-modal-overlay.active {
+        opacity: 1;
+        pointer-events: auto;
+      }
+      .book-modal {
+        background: #fff;
+        border-radius: 18px;
+        box-shadow: 0 8px 48px #ff7e3f44, 0 2px 12px #ffecd244;
+        max-width: 600px;
+        width: 95vw;
+        padding: 0;
+        overflow: hidden;
+        animation: modalIn 0.4s cubic-bezier(0.4, 2, 0.6, 1);
+        position: relative;
+        display: flex;
+        flex-direction: column;
+      }
+      @keyframes modalIn {
+        from {
+          transform: translateY(60px) scale(0.95);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(0) scale(1);
+          opacity: 1;
+        }
+      }
+      .book-modal-header {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        padding: 28px 28px 18px 28px;
+        background: linear-gradient(90deg, #ffecd2 0%, #fcb69f 100%);
+        border-bottom: 1.5px solid #ffecd2;
+      }
+      .book-modal-cover {
+        width: 120px;
+        height: 170px;
+        border-radius: 12px;
+        object-fit: cover;
+        box-shadow: 0 4px 24px #ff7e3f22;
+        background: #eee;
+        flex-shrink: 0;
+      }
+      .book-modal-title {
+        font-size: 1.45rem;
+        font-weight: 800;
+        color: #1a3d2f;
+        margin-bottom: 6px;
+        line-height: 1.2;
+      }
+      .book-modal-author {
+        font-size: 1.08rem;
+        color: #ff7e3f;
+        font-weight: 600;
+        margin-bottom: 4px;
+      }
+      .book-modal-genre {
+        display: inline-block;
+        background: #ffecd2cc;
+        color: #ff7e3f;
+        font-size: 0.98rem;
+        font-weight: 600;
+        border-radius: 8px;
+        padding: 3px 12px;
+        margin-top: 4px;
+        margin-bottom: 0;
+        letter-spacing: 0.2px;
+        box-shadow: 0 2px 8px #fff8;
+      }
+      .book-modal-close {
+        position: absolute;
+        top: 14px;
+        right: 18px;
+        font-size: 1.5rem;
+        color: #ff7e3f;
+        background: none;
+        border: none;
+        cursor: pointer;
+        z-index: 2;
+        transition: color 0.2s;
+      }
+      .book-modal-close:hover {
+        color: #e05d1f;
+      }
+      .book-modal-body {
+        padding: 18px 28px 24px 28px;
+        color: #333;
+        font-size: 1.08rem;
+        line-height: 1.5;
+      }
+      .book-modal-price {
+        font-size: 1.18rem;
+        color: #e05d1f;
+        font-weight: 800;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        letter-spacing: 0.5px;
+      }
+      .book-modal-addcart {
+        background: #ff7e3f;
+        color: #fff;
+        border: none;
+        border-radius: 6px;
+        padding: 12px 28px;
+        font-size: 1.08rem;
+        cursor: pointer;
+        margin-top: 12px;
+        transition: background 0.2s;
+        display: inline-block;
+        font-weight: 700;
+        box-shadow: 0 2px 8px #ffecd244;
+      }
+      .book-modal-addcart:hover {
+        background: #e05d1f;
+      }
+      @media (max-width: 600px) {
+        .book-modal-header,
+        .book-modal-body {
+          padding: 14px 10px 10px 10px;
+        }
+        .book-modal-cover {
+          width: 80px;
+          height: 110px;
+        }
+        .book-modal {
+          max-width: 99vw;
+        }
+      }
+      .toast {
+        position: fixed;
+        bottom: 32px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #ff7e3f;
+        color: #fff;
+        padding: 14px 32px;
+        border-radius: 24px;
+        font-size: 1.08rem;
+        font-weight: 700;
+        box-shadow: 0 4px 24px #ff7e3f44;
+        z-index: 999999;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.4s, bottom 0.4s;
+      }
+      .toast.show {
+        opacity: 1;
+        pointer-events: auto;
+        bottom: 54px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- MENU NAVIGATION -->
+    <nav class="main-nav">
+      <div class="nav-container">
+        <div class="logo">
+          <i class="fa-solid fa-book-open"></i>
+          DINO <span style="color: #1a3d2f">Book</span>
+        </div>
+        <form class="search-bar" onsubmit="return false;">
+          <input
+            type="text"
+            id="searchInput"
+            placeholder="Tìm kiếm sách, tác giả..."
+            autocomplete="off"
+          />
+          <i class="fa fa-search"></i>
+        </form>
+        <button class="menu-toggle" aria-label="Mở menu">
+          <i class="fa fa-bars"></i>
+        </button>
+        <ul class="nav-links">
+          <li>
+            <a href="index.html"><i class="fa fa-home"></i>Trang chủ</a>
+          </li>
+          <li>
+            <a href="web/GioiThieu.html"
+              ><i class="fa fa-book"></i>Giới thiệu</a
+            >
+          </li>
+          <li>
+            <a href="web/lienhe.html"><i class="fa fa-phone"></i>Liên hệ</a>
+          </li>
+          <li>
+            <a href="web/giohang.html"
+              ><i class="fa fa-shopping-cart"></i>Giỏ hàng</a
+            >
+          </li>
+          <li>
+            <button class="nav-btn" tabindex="0">
+              <i class="fa fa-user"></i>Tài khoản
+              <i class="fa fa-caret-down"></i>
+            </button>
+            <div class="dropdown">
+              <a href="web/dangnhap.html"
+                ><i class="fa fa-sign-in-alt"></i> Đăng nhập</a
+              >
+              <a href="web/dangky.html"
+                ><i class="fa fa-user-plus"></i> Đăng ký</a
+              >
+              <a href="#"><i class="fa fa-user-circle"></i> Hồ sơ</a>
+              <a href="#"><i class="fa fa-sign-out-alt"></i> Đăng xuất</a>
+            </div>
+          </li>
+        </ul>
       </div>
-      <form class="search-bar" onsubmit="return false;">
-        <input type="text" id="searchInput" placeholder="Tìm kiếm sách, tác giả..." autocomplete="off">
-        <i class="fa fa-search"></i>
-      </form>
-      <button class="menu-toggle" aria-label="Mở menu"><i class="fa fa-bars"></i></button>
-      <ul class="nav-links">
-        <li><a href="index.html"><i class="fa fa-home"></i>Trang chủ</a></li>
-        <li><a href="web/GioiThieu.html"><i class="fa fa-book"></i>Giới thiệu</a></li>
-        <li><a href="web/lienhe.html"><i class="fa fa-phone"></i>Liên hệ</a></li>
-        <li><a href="web/giohang.html"><i class="fa fa-shopping-cart"></i>Giỏ hàng</a></li>
-        <li>
-          <button class="nav-btn" tabindex="0"><i class="fa fa-user"></i>Tài khoản <i class="fa fa-caret-down"></i></button>
-          <div class="dropdown">
-            <a href="web/dangnhap.html"><i class="fa fa-sign-in-alt"></i> Đăng nhập</a>
-            <a href="web/dangky.html"><i class="fa fa-user-plus"></i> Đăng ký</a>
-            <a href="#"><i class="fa fa-user-circle"></i> Hồ sơ</a>
-            <a href="#"><i class="fa fa-sign-out-alt"></i> Đăng xuất</a>
-          </div>
-        </li>
-      </ul>
+    </nav>
+    <!-- Overlay loading -->
+    <div id="overlay-loading">
+      <div class="dino-logo">🦕</div>
+      <div class="loading-text">DINO Book Store</div>
+      <div class="loading-bar"><div class="loading-bar-inner"></div></div>
     </div>
-  </nav>
-  <!-- Overlay loading -->
-  <div id="overlay-loading">
-    <div class="dino-logo">🦕</div>
-    <div class="loading-text">DINO Book Store</div>
-    <div class="loading-bar"><div class="loading-bar-inner"></div></div>
-  </div>
-  <div class="container" style="opacity:0; transition:opacity 0.7s cubic-bezier(.4,2,.6,1);">
-    <!-- Bên trái: Nội dung sách -->
-    <div class="left">
-      <div id="main-title" class="main-title fade-in-once delay1">
-        <span class="dino">🦕</span>
-        Cùng DINO Book Store<br>
-        <span class="highlight">Khám Phá Thế Giới Sách</span>
+    <div
+      class="container"
+      style="opacity: 0; transition: opacity 0.7s cubic-bezier(0.4, 2, 0.6, 1)"
+    >
+      <!-- Bên trái: Nội dung sách -->
+      <div class="left">
+        <div id="main-title" class="main-title fade-in-once delay1">
+          <span class="dino">🦕</span>
+          Cùng DINO Book Store<br />
+          <span class="highlight">Khám Phá Thế Giới Sách</span>
+        </div>
+        <div id="main-desc" class="main-desc fade-in-once delay2">
+          Nơi Mỗi Trang Sách Là Một Cuộc Phiêu Lưu
+        </div>
+        <div
+          id="book-content"
+          class="book-content-fancy fade-in-once delay3"
+        ></div>
       </div>
-      <div id="main-desc" class="main-desc fade-in-once delay2">
-        Nơi Mỗi Trang Sách Là Một Cuộc Phiêu Lưu
-      </div>
-      <div id="book-content" class="book-content-fancy fade-in-once delay3"></div>
-    </div>
-    <!-- Bên phải: Carousel sách vòng tròn -->
-    <div class="right">
-      <div class="carousel-container">
-        <div class="carousel" id="carousel"></div>
-      </div>
-    </div>
-  </div>
-  <!-- Thể loại sách -->
-  <div class="genre-tabs" id="genreTabs">
-    <button class="genre-tab active" data-genre="all"><i class="fa fa-globe"></i> Tất cả</button>
-    <button class="genre-tab" data-genre="trinhtham"><i class="fa fa-user-secret"></i> Trinh thám</button>
-    <button class="genre-tab" data-genre="vientuong"><i class="fa fa-rocket"></i> Viễn tưởng</button>
-    <button class="genre-tab" data-genre="huyenhuyen"><i class="fa fa-dragon"></i> Huyền huyễn</button>
-    <button class="genre-tab" data-genre="quansu"><i class="fa fa-shield-halved"></i> Quân sự</button>
-    <button class="genre-tab" data-genre="ngontinh"><i class="fa fa-heart"></i> Ngôn tình</button>
-  </div>
-  <div class="genre-books-section">
-    <div class="genre-books-list" id="genreBooksList"></div>
-  </div>
-  <!-- FOOTER -->
-  <footer class="dino-footer">
-    <div class="footer-content">
-      <div class="footer-logo">
-        <span class="footer-dino">🦕</span> <span>DINO Book Store</span>
-      </div>
-      <div class="footer-social">
-        <a href="#" title="Facebook"><i class="fab fa-facebook-f"></i></a>
-        <a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
-        <a href="#" title="Twitter"><i class="fab fa-twitter"></i></a>
-        <a href="#" title="Github"><i class="fab fa-github"></i></a>
-      </div>
-      <div class="footer-copy">
-        &copy; 2024 DINO Book Store. All rights reserved.
-      </div>
-    </div>
-  </footer>
-  <!-- MODAL CHI TIẾT SÁCH -->
-  <div class="book-modal-overlay" id="bookModalOverlay">
-    <div class="book-modal" id="bookModal">
-      <button class="book-modal-close" id="bookModalClose" aria-label="Đóng">&times;</button>
-      <div class="book-modal-header">
-        <img class="book-modal-cover" id="modalBookCover" src="" alt="">
-        <div>
-          <div class="book-modal-title" id="modalBookTitle"></div>
-          <div class="book-modal-author" id="modalBookAuthor"></div>
-          <div class="book-modal-genre" id="modalBookGenre"></div>
-          <div class="book-modal-price" id="modalBookPrice"></div>
+      <!-- Bên phải: Carousel sách vòng tròn -->
+      <div class="right">
+        <div class="carousel-container">
+          <div class="carousel" id="carousel"></div>
         </div>
       </div>
-      <div class="book-modal-body" id="modalBookDesc"></div>
-      <button class="book-modal-addcart" id="modalAddCartBtn"><i class="fa fa-cart-plus"></i> Thêm vào giỏ hàng</button>
     </div>
-  </div>
-  <!-- TOAST THÔNG BÁO -->
-  <div class="toast" id="toast"></div>
-  <script>
-    // ================== DỮ LIỆU SÁCH ==================
-const books = [
-  {
-    title: "The Wild Woman's Way",
-    author: "Michaela Boehm",
-    cover: "https://covers.openlibrary.org/b/id/10523338-L.jpg",
-    content: `
+    <!-- Thể loại sách -->
+    <div class="genre-tabs" id="genreTabs">
+      <button class="genre-tab active" data-genre="all">
+        <i class="fa fa-globe"></i> Tất cả
+      </button>
+      <button class="genre-tab" data-genre="trinhtham">
+        <i class="fa fa-user-secret"></i> Trinh thám
+      </button>
+      <button class="genre-tab" data-genre="vientuong">
+        <i class="fa fa-rocket"></i> Viễn tưởng
+      </button>
+      <button class="genre-tab" data-genre="huyenhuyen">
+        <i class="fa fa-dragon"></i> Huyền huyễn
+      </button>
+      <button class="genre-tab" data-genre="quansu">
+        <i class="fa fa-shield-halved"></i> Quân sự
+      </button>
+      <button class="genre-tab" data-genre="ngontinh">
+        <i class="fa fa-heart"></i> Ngôn tình
+      </button>
+    </div>
+    <div class="genre-books-section">
+      <div class="genre-books-list" id="genreBooksList"></div>
+    </div>
+    <!-- FOOTER -->
+    <footer class="dino-footer">
+      <div class="footer-content">
+        <div class="footer-logo">
+          <span class="footer-dino">🦕</span> <span>DINO Book Store</span>
+        </div>
+        <div class="footer-social">
+          <a href="#" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
+          <a href="#" title="Twitter"><i class="fab fa-twitter"></i></a>
+          <a href="#" title="Github"><i class="fab fa-github"></i></a>
+        </div>
+        <div class="footer-copy">
+          &copy; 2024 DINO Book Store. All rights reserved.
+        </div>
+      </div>
+    </footer>
+    <!-- MODAL CHI TIẾT SÁCH -->
+    <div class="book-modal-overlay" id="bookModalOverlay">
+      <div class="book-modal" id="bookModal">
+        <button class="book-modal-close" id="bookModalClose" aria-label="Đóng">
+          &times;
+        </button>
+        <div class="book-modal-header">
+          <img class="book-modal-cover" id="modalBookCover" src="" alt="" />
+          <div>
+            <div class="book-modal-title" id="modalBookTitle"></div>
+            <div class="book-modal-author" id="modalBookAuthor"></div>
+            <div class="book-modal-genre" id="modalBookGenre"></div>
+            <div class="book-modal-price" id="modalBookPrice"></div>
+          </div>
+        </div>
+        <div class="book-modal-body" id="modalBookDesc"></div>
+        <button class="book-modal-addcart" id="modalAddCartBtn">
+          <i class="fa fa-cart-plus"></i> Thêm vào giỏ hàng
+        </button>
+      </div>
+    </div>
+    <!-- TOAST THÔNG BÁO -->
+    <div class="toast" id="toast"></div>
+    <script>
+      // ================== DỮ LIỆU SÁCH ==================
+      const books = [
+        {
+          title: "The Wild Woman's Way",
+          author: "Michaela Boehm",
+          cover: "https://covers.openlibrary.org/b/id/10523338-L.jpg",
+          content: `
       <h2>The Wild Woman's Way</h2>
       <p><b>Tác giả:</b> Michaela Boehm</p>
       <p>Unlock Your Full Potential for Pleasure, Power, and Fulfillment. Một cuốn sách truyền cảm hứng giúp bạn khám phá sức mạnh và sự tự do nội tại của chính mình.</p>
     `,
-    genre: "ngontinh",
-    price: 120000
-  },
-  {
-    title: "See What I Have Done",
-    author: "Sarah Schmidt",
-    cover: "https://covers.openlibrary.org/b/id/8231996-L.jpg",
-    content: `
+          genre: "ngontinh",
+          price: 120000,
+        },
+        {
+          title: "See What I Have Done",
+          author: "Sarah Schmidt",
+          cover: "https://covers.openlibrary.org/b/id/8231996-L.jpg",
+          content: `
       <h2>See What I Have Done</h2>
       <p><b>Tác giả:</b> Sarah Schmidt</p>
       <p>Một tiểu thuyết tâm lý tội phạm dựa trên vụ án nổi tiếng Lizzie Borden, đưa bạn vào hành trình khám phá sự thật và những bí ẩn đen tối.</p>
     `,
-    genre: "trinhtham",
-    price: 135000
-  },
-  {
-    title: "The Familiars",
-    author: "Stacey Halls",
-    cover: "https://covers.openlibrary.org/b/id/10523337-L.jpg",
-    content: `
+          genre: "trinhtham",
+          price: 135000,
+        },
+        {
+          title: "The Familiars",
+          author: "Stacey Halls",
+          cover: "https://covers.openlibrary.org/b/id/10523337-L.jpg",
+          content: `
       <h2>The Familiars</h2>
       <p><b>Tác giả:</b> Stacey Halls</p>
       <p>Một câu chuyện lịch sử hấp dẫn về tình bạn, phép thuật và sự kiên cường của phụ nữ trong thời kỳ săn phù thủy ở Anh quốc.</p>
     `,
-    genre: "huyenhuyen",
-    price: 99000
-  },
-  {
-    title: "Atomic Habits",
-    author: "James Clear",
-    cover: "https://covers.openlibrary.org/b/id/9250225-L.jpg",
-    content: `
+          genre: "huyenhuyen",
+          price: 99000,
+        },
+        {
+          title: "Atomic Habits",
+          author: "James Clear",
+          cover: "https://covers.openlibrary.org/b/id/9250225-L.jpg",
+          content: `
       <h2>Atomic Habits</h2>
       <p><b>Tác giả:</b> James Clear</p>
       <p>Cuốn sách nổi tiếng về xây dựng thói quen nhỏ để tạo nên thành công lớn, giúp bạn thay đổi cuộc sống từng bước một cách bền vững.</p>
     `,
-    genre: "vientuong",
-    price: 150000
-  },
-  {
-    title: "Ikigai: The Japanese Secret to a Long and Happy Life",
-    author: "Héctor García & Francesc Miralles",
-    cover: "https://covers.openlibrary.org/b/id/8370226-L.jpg",
-    content: `
+          genre: "vientuong",
+          price: 150000,
+        },
+        {
+          title: "Ikigai: The Japanese Secret to a Long and Happy Life",
+          author: "Héctor García & Francesc Miralles",
+          cover: "https://covers.openlibrary.org/b/id/8370226-L.jpg",
+          content: `
       <h2>Ikigai: The Japanese Secret to a Long and Happy Life</h2>
       <p><b>Tác giả:</b> Héctor García & Francesc Miralles</p>
       <p>Khám phá bí quyết sống lâu và hạnh phúc của người Nhật, tìm ra ý nghĩa cuộc sống và động lực mỗi ngày.</p>
     `,
-    genre: "vientuong",
-    price: 110000
-  }
-];
-const moreBooks = [
-  {
-    title: "Tam Thể",
-    author: "Lưu Từ Hân",
-    cover: "https://covers.openlibrary.org/b/id/10523339-L.jpg",
-    content: `
+          genre: "vientuong",
+          price: 110000,
+        },
+      ];
+      const moreBooks = [
+        {
+          title: "Tam Thể",
+          author: "Lưu Từ Hân",
+          cover: "https://covers.openlibrary.org/b/id/10523339-L.jpg",
+          content: `
       <h2>Tam Thể</h2>
       <p><b>Tác giả:</b> Lưu Từ Hân</p>
       <p>Siêu phẩm viễn tưởng về sự tiếp xúc giữa nhân loại và nền văn minh ngoài hành tinh.</p>
     `,
-    genre: "vientuong",
-    price: 175000
-  },
-  {
-    title: "Sherlock Holmes: Tập Truyện Ngắn",
-    author: "Arthur Conan Doyle",
-    cover: "https://covers.openlibrary.org/b/id/10523340-L.jpg",
-    content: `
+          genre: "vientuong",
+          price: 175000,
+        },
+        {
+          title: "Sherlock Holmes: Tập Truyện Ngắn",
+          author: "Arthur Conan Doyle",
+          cover:
+            "https://product.hstatic.net/200000950941/product/sh_1_22efc1374f4441c682c4a98e482bd151_master.jpg",
+          content: `
       <h2>Sherlock Holmes: Tập Truyện Ngắn</h2>
       <p><b>Tác giả:</b> Arthur Conan Doyle</p>
       <p>Những vụ án trinh thám kinh điển của thám tử lừng danh Sherlock Holmes.</p>
     `,
-    genre: "trinhtham",
-    price: 98000
-  },
-  {
-    title: "Đấu La Đại Lục",
-    author: "Đường Gia Tam Thiếu",
-    cover: "https://covers.openlibrary.org/b/id/10523341-L.jpg",
-    content: `
+          genre: "trinhtham",
+          price: 98000,
+        },
+        {
+          title: "Đấu La Đại Lục",
+          author: "Đường Gia Tam Thiếu",
+          cover:
+            "https://nhasachmienphi.com/images/thumbnail/nhasachmienphi-dau-la-dai-luc.jpg",
+          content: `
       <h2>Đấu La Đại Lục</h2>
       <p><b>Tác giả:</b> Đường Gia Tam Thiếu</p>
       <p>Huyền huyễn, tu luyện, thế giới linh hồn và những trận chiến hấp dẫn.</p>
     `,
-    genre: "huyenhuyen",
-    price: 125000
-  },
-  {
-    title: "Binh Pháp Tôn Tử",
-    author: "Tôn Vũ",
-    cover: "https://covers.openlibrary.org/b/id/10523342-L.jpg",
-    content: `
+          genre: "huyenhuyen",
+          price: 125000,
+        },
+        {
+          title: "Binh Pháp Tôn Tử",
+          author: "Tôn Vũ",
+          cover:
+            "https://bizweb.dktcdn.net/100/180/408/products/ton-tu-binh-phap-bia-1.jpg?v=1645088330417",
+          content: `
       <h2>Binh Pháp Tôn Tử</h2>
       <p><b>Tác giả:</b> Tôn Vũ</p>
       <p>Tác phẩm kinh điển về nghệ thuật quân sự, chiến lược và trí tuệ.</p>
     `,
-    genre: "quansu",
-    price: 89000
-  },
-  {
-    title: "Hậu Cung Như Ý Truyện",
-    author: "Lưu Liễm Tử",
-    cover: "https://covers.openlibrary.org/b/id/10523343-L.jpg",
-    content: `
+          genre: "quansu",
+          price: 89000,
+        },
+        {
+          title: "Hậu Cung Như Ý Truyện",
+          author: "Lưu Liễm Tử",
+          cover:
+            "https://cdn1.fahasa.com/media/catalog/product/b/i/bia-mem_hau-cung-nhu-y-truyen---tap-4-3-01-copy_1.jpg",
+          content: `
       <h2>Hậu Cung Như Ý Truyện</h2>
       <p><b>Tác giả:</b> Lưu Liễm Tử</p>
       <p>Ngôn tình cung đấu, tình yêu và quyền lực trong hậu cung nhà Thanh.</p>
     `,
-    genre: "ngontinh",
-    price: 112000
-  }
-];
+          genre: "ngontinh",
+          price: 112000,
+        },
+      ];
 
-// ================== GENRE DATA ==================
-const genres = [
-  { key: "all", label: "Tất cả", icon: "fa-globe" },
-  { key: "trinhtham", label: "Trinh thám", icon: "fa-user-secret" },
-  { key: "vientuong", label: "Viễn tưởng", icon: "fa-rocket" },
-  { key: "huyenhuyen", label: "Huyền huyễn", icon: "fa-dragon" },
-  { key: "quansu", label: "Quân sự", icon: "fa-shield-halved" },
-  { key: "ngontinh", label: "Ngôn tình", icon: "fa-heart" }
-];
-const genreBooksList = document.getElementById('genreBooksList');
-let currentGenre = "all";
-let searchValue = "";
-const allBooks = books.concat(moreBooks);
+      // ================== GENRE DATA ==================
+      const genres = [
+        { key: "all", label: "Tất cả", icon: "fa-globe" },
+        { key: "trinhtham", label: "Trinh thám", icon: "fa-user-secret" },
+        { key: "vientuong", label: "Viễn tưởng", icon: "fa-rocket" },
+        { key: "huyenhuyen", label: "Huyền huyễn", icon: "fa-dragon" },
+        { key: "quansu", label: "Quân sự", icon: "fa-shield-halved" },
+        { key: "ngontinh", label: "Ngôn tình", icon: "fa-heart" },
+      ];
+      const genreBooksList = document.getElementById("genreBooksList");
+      let currentGenre = "all";
+      let searchValue = "";
+      const allBooks = books.concat(moreBooks);
 
-// ================== MENU NAVIGATION JS ==================
-const menuToggle = document.querySelector('.main-nav .menu-toggle');
-const navLinks = document.querySelector('.main-nav .nav-links');
-menuToggle.onclick = () => {
-  navLinks.classList.toggle('open');
-};
-document.querySelectorAll('.main-nav .nav-btn').forEach(btn => {
-  btn.onclick = (e) => {
-    e.preventDefault();
-    document.querySelectorAll('.main-nav ul.nav-links li').forEach(li => {
-      if (li !== btn.parentElement) li.classList.remove('open');
-    });
-    btn.parentElement.classList.toggle('open');
-  };
-  document.addEventListener('click', function(ev) {
-    if (!btn.parentElement.contains(ev.target)) {
-      btn.parentElement.classList.remove('open');
-    }
-  });
-});
-document.querySelectorAll('.main-nav .nav-links a').forEach(link => {
-  link.onclick = () => {
-    navLinks.classList.remove('open');
-    document.querySelectorAll('.main-nav ul.nav-links li').forEach(li => li.classList.remove('open'));
-  };
-});
+      // ================== MENU NAVIGATION JS ==================
+      const menuToggle = document.querySelector(".main-nav .menu-toggle");
+      const navLinks = document.querySelector(".main-nav .nav-links");
+      menuToggle.onclick = () => {
+        navLinks.classList.toggle("open");
+      };
+      document.querySelectorAll(".main-nav .nav-btn").forEach((btn) => {
+        btn.onclick = (e) => {
+          e.preventDefault();
+          document
+            .querySelectorAll(".main-nav ul.nav-links li")
+            .forEach((li) => {
+              if (li !== btn.parentElement) li.classList.remove("open");
+            });
+          btn.parentElement.classList.toggle("open");
+        };
+        document.addEventListener("click", function (ev) {
+          if (!btn.parentElement.contains(ev.target)) {
+            btn.parentElement.classList.remove("open");
+          }
+        });
+      });
+      document.querySelectorAll(".main-nav .nav-links a").forEach((link) => {
+        link.onclick = () => {
+          navLinks.classList.remove("open");
+          document
+            .querySelectorAll(".main-nav ul.nav-links li")
+            .forEach((li) => li.classList.remove("open"));
+        };
+      });
 
-// ================== CAROUSEL ==================
-const carousel = document.getElementById('carousel');
-let selectedIdx = 0;
-const bookContent = document.getElementById('book-content');
-const N = books.length;
-let isRotating = false;
-let autoTimeout = null;
-let isAutoPaused = false;
+      // ================== CAROUSEL ==================
+      const carousel = document.getElementById("carousel");
+      let selectedIdx = 0;
+      const bookContent = document.getElementById("book-content");
+      const N = books.length;
+      let isRotating = false;
+      let autoTimeout = null;
+      let isAutoPaused = false;
 
-function renderCarousel(animate = true) {
-  const angleStep = 360 / N;
-  const radius = 200;
-  let targetAngle = -selectedIdx * angleStep;
-  carousel.style.transition = animate ? "transform 0.7s cubic-bezier(.4,2,.6,1)" : "none";
-  carousel.style.transform = `rotateY(${targetAngle}deg)`;
+      function renderCarousel(animate = true) {
+        const angleStep = 360 / N;
+        const radius = 200;
+        let targetAngle = -selectedIdx * angleStep;
+        carousel.style.transition = animate
+          ? "transform 0.7s cubic-bezier(.4,2,.6,1)"
+          : "none";
+        carousel.style.transform = `rotateY(${targetAngle}deg)`;
 
-  carousel.innerHTML = '';
-  books.forEach((book, idx) => {
-    const angle = idx * angleStep;
-    const bookDiv = document.createElement('div');
-    bookDiv.style.setProperty('--angle', `${angle}deg`);
-    bookDiv.style.setProperty('--radius', `${radius}px`);
-    if (idx === selectedIdx) {
-      bookDiv.className = 'carousel-book selected';
-    } else {
-      bookDiv.className = 'carousel-book not-selected';
-    }
-    bookDiv.innerHTML = `<img src="${book.cover}" alt="${book.title}" title="${book.title}">`;
-    bookDiv.addEventListener('click', () => {
-      if (selectedIdx !== idx && !isRotating) {
-        rotateTo(idx);
+        carousel.innerHTML = "";
+        books.forEach((book, idx) => {
+          const angle = idx * angleStep;
+          const bookDiv = document.createElement("div");
+          bookDiv.style.setProperty("--angle", `${angle}deg`);
+          bookDiv.style.setProperty("--radius", `${radius}px`);
+          if (idx === selectedIdx) {
+            bookDiv.className = "carousel-book selected";
+          } else {
+            bookDiv.className = "carousel-book not-selected";
+          }
+          bookDiv.innerHTML = `<img src="${book.cover}" alt="${book.title}" title="${book.title}">`;
+          bookDiv.addEventListener("click", () => {
+            if (selectedIdx !== idx && !isRotating) {
+              rotateTo(idx);
+            }
+          });
+          carousel.appendChild(bookDiv);
+        });
       }
-    });
-    carousel.appendChild(bookDiv);
-  });
-}
 
-function fadeInOnceOnScroll() {
-  document.querySelectorAll('.fade-in-once').forEach(el => {
-    if (el.classList.contains('visible')) return;
-    const rect = el.getBoundingClientRect();
-    if (rect.top < window.innerHeight - 60) {
-      el.classList.add('visible');
-    }
-  });
-}
-window.addEventListener('scroll', fadeInOnceOnScroll);
+      function fadeInOnceOnScroll() {
+        document.querySelectorAll(".fade-in-once").forEach((el) => {
+          if (el.classList.contains("visible")) return;
+          const rect = el.getBoundingClientRect();
+          if (rect.top < window.innerHeight - 60) {
+            el.classList.add("visible");
+          }
+        });
+      }
+      window.addEventListener("scroll", fadeInOnceOnScroll);
 
-function renderBookInfo(fade = true) {
-  const prevHeight = bookContent.offsetHeight;
-  bookContent.style.minHeight = prevHeight + "px";
-  if (fade) {
-    bookContent.classList.remove('fade-in');
-    bookContent.classList.add('fade-out');
-    setTimeout(() => {
-      bookContent.innerHTML = books[selectedIdx].content + `<button class="btn">Xem thêm →</button>`;
-      bookContent.classList.remove('fade-out');
-      bookContent.classList.add('fade-in');
-      setTimeout(() => {
-        bookContent.style.minHeight = "";
-      }, 500);
-    }, 320);
-  } else {
-    bookContent.innerHTML = books[selectedIdx].content + `<button class="btn">Xem thêm →</button>`;
-    bookContent.classList.add('fade-in');
-    setTimeout(() => {
-      bookContent.style.minHeight = "";
-    }, 500);
-  }
-}
+      function renderBookInfo(fade = true) {
+        const prevHeight = bookContent.offsetHeight;
+        bookContent.style.minHeight = prevHeight + "px";
+        if (fade) {
+          bookContent.classList.remove("fade-in");
+          bookContent.classList.add("fade-out");
+          setTimeout(() => {
+            bookContent.innerHTML =
+              books[selectedIdx].content +
+              `<button class="btn">Xem thêm →</button>`;
+            bookContent.classList.remove("fade-out");
+            bookContent.classList.add("fade-in");
+            setTimeout(() => {
+              bookContent.style.minHeight = "";
+            }, 500);
+          }, 320);
+        } else {
+          bookContent.innerHTML =
+            books[selectedIdx].content +
+            `<button class="btn">Xem thêm →</button>`;
+          bookContent.classList.add("fade-in");
+          setTimeout(() => {
+            bookContent.style.minHeight = "";
+          }, 500);
+        }
+      }
 
-function autoRotateStep() {
-  if (isRotating || isAutoPaused) {
-    autoTimeout = setTimeout(autoRotateStep, 400);
-    return;
-  }
-  isRotating = true;
-  selectedIdx = (selectedIdx + 1) % N;
-  renderCarousel(true);
-  renderBookInfo(true);
-  carousel.addEventListener('transitionend', onAutoTransitionEnd, { once: true });
-}
-function onAutoTransitionEnd() {
-  isRotating = false;
-  if (!isAutoPaused) autoTimeout = setTimeout(autoRotateStep, 2600);
-}
-function startAutoRotate() {
-  isAutoPaused = false;
-  if (!autoTimeout) autoTimeout = setTimeout(autoRotateStep, 2600);
-}
-function stopAutoRotate() {
-  isAutoPaused = true;
-  if (autoTimeout) clearTimeout(autoTimeout);
-  autoTimeout = null;
-}
-carousel.parentElement.onmouseenter = stopAutoRotate;
-carousel.parentElement.onmouseleave = startAutoRotate;
-document.addEventListener('visibilitychange', () => {
-  if (document.hidden) stopAutoRotate();
-  else startAutoRotate();
-});
-function rotateTo(targetIdx) {
-  if (isRotating) return;
-  isRotating = true;
-  stopAutoRotate();
-  let current = selectedIdx;
-  let diff = (targetIdx - current + N) % N;
-  let step = diff > N / 2 ? -1 : 1;
-  let steps = Math.abs(diff > N / 2 ? diff - N : diff);
-  let count = 0;
-  function nextStep() {
-    if (count < steps) {
-      current = (current + step + N) % N;
-      selectedIdx = current;
-      renderCarousel(true);
-      renderBookInfo(true);
-      count++;
-      setTimeout(nextStep, 180);
-    } else {
-      selectedIdx = targetIdx;
-      renderCarousel(true);
-      renderBookInfo(true);
-      isRotating = false;
-      startAutoRotate();
-    }
-  }
-  nextStep();
-}
+      function autoRotateStep() {
+        if (isRotating || isAutoPaused) {
+          autoTimeout = setTimeout(autoRotateStep, 400);
+          return;
+        }
+        isRotating = true;
+        selectedIdx = (selectedIdx + 1) % N;
+        renderCarousel(true);
+        renderBookInfo(true);
+        carousel.addEventListener("transitionend", onAutoTransitionEnd, {
+          once: true,
+        });
+      }
+      function onAutoTransitionEnd() {
+        isRotating = false;
+        if (!isAutoPaused) autoTimeout = setTimeout(autoRotateStep, 2600);
+      }
+      function startAutoRotate() {
+        isAutoPaused = false;
+        if (!autoTimeout) autoTimeout = setTimeout(autoRotateStep, 2600);
+      }
+      function stopAutoRotate() {
+        isAutoPaused = true;
+        if (autoTimeout) clearTimeout(autoTimeout);
+        autoTimeout = null;
+      }
+      carousel.parentElement.onmouseenter = stopAutoRotate;
+      carousel.parentElement.onmouseleave = startAutoRotate;
+      document.addEventListener("visibilitychange", () => {
+        if (document.hidden) stopAutoRotate();
+        else startAutoRotate();
+      });
+      function rotateTo(targetIdx) {
+        if (isRotating) return;
+        isRotating = true;
+        stopAutoRotate();
+        let current = selectedIdx;
+        let diff = (targetIdx - current + N) % N;
+        let step = diff > N / 2 ? -1 : 1;
+        let steps = Math.abs(diff > N / 2 ? diff - N : diff);
+        let count = 0;
+        function nextStep() {
+          if (count < steps) {
+            current = (current + step + N) % N;
+            selectedIdx = current;
+            renderCarousel(true);
+            renderBookInfo(true);
+            count++;
+            setTimeout(nextStep, 180);
+          } else {
+            selectedIdx = targetIdx;
+            renderCarousel(true);
+            renderBookInfo(true);
+            isRotating = false;
+            startAutoRotate();
+          }
+        }
+        nextStep();
+      }
 
-// ================== MODAL CHI TIẾT SÁCH ==================
-const bookModalOverlay = document.getElementById('bookModalOverlay');
-const bookModal = document.getElementById('bookModal');
-const bookModalClose = document.getElementById('bookModalClose');
-const modalBookCover = document.getElementById('modalBookCover');
-const modalBookTitle = document.getElementById('modalBookTitle');
-const modalBookAuthor = document.getElementById('modalBookAuthor');
-const modalBookGenre = document.getElementById('modalBookGenre');
-const modalBookPrice = document.getElementById('modalBookPrice');
-const modalBookDesc = document.getElementById('modalBookDesc');
-const modalAddCartBtn = document.getElementById('modalAddCartBtn');
-let currentModalBook = null;
+      // ================== MODAL CHI TIẾT SÁCH ==================
+      const bookModalOverlay = document.getElementById("bookModalOverlay");
+      const bookModal = document.getElementById("bookModal");
+      const bookModalClose = document.getElementById("bookModalClose");
+      const modalBookCover = document.getElementById("modalBookCover");
+      const modalBookTitle = document.getElementById("modalBookTitle");
+      const modalBookAuthor = document.getElementById("modalBookAuthor");
+      const modalBookGenre = document.getElementById("modalBookGenre");
+      const modalBookPrice = document.getElementById("modalBookPrice");
+      const modalBookDesc = document.getElementById("modalBookDesc");
+      const modalAddCartBtn = document.getElementById("modalAddCartBtn");
+      let currentModalBook = null;
 
-function showBookModal(book) {
-  currentModalBook = book;
-  modalBookCover.src = book.cover;
-  modalBookCover.alt = book.title;
-  modalBookTitle.textContent = book.title;
-  modalBookAuthor.innerHTML = `<i class="fa fa-user"></i> ${book.author}`;
-  let genreObj = genres.find(g => g.key === book.genre);
-  modalBookGenre.innerHTML = genreObj ? `<i class="fa ${genreObj.icon}"></i> ${genreObj.label}` : "";
-  modalBookPrice.textContent = "Giá: " + book.price.toLocaleString('vi-VN') + "₫";
-  modalBookDesc.innerHTML = book.content;
-  bookModalOverlay.classList.add('active');
-  document.body.style.overflow = 'hidden';
-}
-function hideBookModal() {
-  bookModalOverlay.classList.remove('active');
-  document.body.style.overflow = '';
-  currentModalBook = null;
-}
-bookModalClose.onclick = hideBookModal;
-bookModalOverlay.onclick = function(e) {
-  if (e.target === bookModalOverlay) hideBookModal();
-};
-document.addEventListener('keydown', function(e) {
-  if (bookModalOverlay.classList.contains('active') && e.key === 'Escape') hideBookModal();
-});
+      function showBookModal(book) {
+        currentModalBook = book;
+        modalBookCover.src = book.cover;
+        modalBookCover.alt = book.title;
+        modalBookTitle.textContent = book.title;
+        modalBookAuthor.innerHTML = `<i class="fa fa-user"></i> ${book.author}`;
+        let genreObj = genres.find((g) => g.key === book.genre);
+        modalBookGenre.innerHTML = genreObj
+          ? `<i class="fa ${genreObj.icon}"></i> ${genreObj.label}`
+          : "";
+        modalBookPrice.textContent =
+          "Giá: " + book.price.toLocaleString("vi-VN") + "₫";
+        modalBookDesc.innerHTML = book.content;
+        bookModalOverlay.classList.add("active");
+        document.body.style.overflow = "hidden";
+      }
+      function hideBookModal() {
+        bookModalOverlay.classList.remove("active");
+        document.body.style.overflow = "";
+        currentModalBook = null;
+      }
+      bookModalClose.onclick = hideBookModal;
+      bookModalOverlay.onclick = function (e) {
+        if (e.target === bookModalOverlay) hideBookModal();
+      };
+      document.addEventListener("keydown", function (e) {
+        if (bookModalOverlay.classList.contains("active") && e.key === "Escape")
+          hideBookModal();
+      });
 
-// ================== GIỎ HÀNG ==================
-function getCart() {
-  try {
-    return JSON.parse(localStorage.getItem('cart')) || [];
-  } catch { return []; }
-}
-function setCart(cart) {
-  localStorage.setItem('cart', JSON.stringify(cart));
-}
-function addToCart(book) {
-  let cart = getCart();
-  let idx = cart.findIndex(item => item.title === book.title && item.author === book.author);
-  if (idx >= 0) {
-    cart[idx].qty += 1;
-  } else {
-    cart.push({ ...book, qty: 1 });
-  }
-  setCart(cart);
-  showToast(`Đã thêm "${book.title}" vào giỏ hàng!`);
-}
-// Toast thông báo
-const toast = document.getElementById('toast');
-function showToast(msg) {
-  toast.textContent = msg;
-  toast.classList.add('show');
-  setTimeout(() => toast.classList.remove('show'), 1800);
-}
+      // ================== GIỎ HÀNG ==================
+      function getCart() {
+        try {
+          return JSON.parse(localStorage.getItem("cart")) || [];
+        } catch {
+          return [];
+        }
+      }
+      function setCart(cart) {
+        localStorage.setItem("cart", JSON.stringify(cart));
+      }
+      function addToCart(book) {
+        let cart = getCart();
+        let idx = cart.findIndex(
+          (item) => item.title === book.title && item.author === book.author
+        );
+        if (idx >= 0) {
+          cart[idx].qty += 1;
+        } else {
+          cart.push({ ...book, qty: 1 });
+        }
+        setCart(cart);
+        showToast(`Đã thêm "${book.title}" vào giỏ hàng!`);
+      }
+      // Toast thông báo
+      const toast = document.getElementById("toast");
+      function showToast(msg) {
+        toast.textContent = msg;
+        toast.classList.add("show");
+        setTimeout(() => toast.classList.remove("show"), 1800);
+      }
 
-// ================== HIỂN THỊ SÁCH THEO THỂ LOẠI ==================
-function renderGenreBooks() {
-  let filtered = allBooks.filter(book => {
-    let matchGenre = (currentGenre === "all" || book.genre === currentGenre);
-    let matchSearch = (
-      !searchValue ||
-      book.title.toLowerCase().includes(searchValue) ||
-      book.author.toLowerCase().includes(searchValue)
-    );
-    return matchGenre && matchSearch;
-  });
-  genreBooksList.innerHTML = "";
-  if (filtered.length === 0) {
-    genreBooksList.innerHTML = `<div style="grid-column:1/-1;text-align:center;color:#ff7e3f;font-size:1.2rem;padding:32px 0;">Không tìm thấy sách phù hợp.</div>`;
-    return;
-  }
-  filtered.forEach((book, i) => {
-    let genreObj = genres.find(g => g.key === book.genre);
-    let genreLabel = genreObj ? genreObj.label : "";
-    let genreIcon = genreObj ? genreObj.icon : "";
-    let card = document.createElement('div');
-    card.className = "book-card";
-    card.tabIndex = 0;
-    card.style.animationDelay = (i * 0.08) + "s";
-    card.innerHTML = `
+      // ================== HIỂN THỊ SÁCH THEO THỂ LOẠI ==================
+      function renderGenreBooks() {
+        let filtered = allBooks.filter((book) => {
+          let matchGenre =
+            currentGenre === "all" || book.genre === currentGenre;
+          let matchSearch =
+            !searchValue ||
+            book.title.toLowerCase().includes(searchValue) ||
+            book.author.toLowerCase().includes(searchValue);
+          return matchGenre && matchSearch;
+        });
+        genreBooksList.innerHTML = "";
+        if (filtered.length === 0) {
+          genreBooksList.innerHTML = `<div style="grid-column:1/-1;text-align:center;color:#ff7e3f;font-size:1.2rem;padding:32px 0;">Không tìm thấy sách phù hợp.</div>`;
+          return;
+        }
+        filtered.forEach((book, i) => {
+          let genreObj = genres.find((g) => g.key === book.genre);
+          let genreLabel = genreObj ? genreObj.label : "";
+          let genreIcon = genreObj ? genreObj.icon : "";
+          let card = document.createElement("div");
+          card.className = "book-card";
+          card.tabIndex = 0;
+          card.style.animationDelay = i * 0.08 + "s";
+          card.innerHTML = `
       <img class="book-cover" src="${book.cover}" alt="${book.title}">
       <div class="book-info">
         <div class="book-title">${book.title}</div>
         <div class="book-author"><i class="fa fa-user"></i> ${book.author}</div>
-        <div class="book-desc">${book.content.replace(/<[^>]+>/g, '').slice(0, 80)}...</div>
+        <div class="book-desc">${book.content
+          .replace(/<[^>]+>/g, "")
+          .slice(0, 80)}...</div>
         <span class="book-genre"><i class="fa ${genreIcon}"></i> ${genreLabel}</span>
-        <div class="book-modal-price" style="margin:8px 0 0 0;">${book.price.toLocaleString('vi-VN')}₫</div>
+        <div class="book-modal-price" style="margin:8px 0 0 0;">${book.price.toLocaleString(
+          "vi-VN"
+        )}₫</div>
         <button class="book-more" tabindex="0"><i class="fa fa-cart-plus"></i> Thêm vào giỏ hàng</button>
       </div>
     `;
-    // Khi click vào thẻ sách (trừ nút thêm giỏ)
-    card.addEventListener('click', function(e) {
-      if (e.target.classList.contains('book-more')) return;
-      showBookModal(book);
-    });
-    // Khi click nút thêm vào giỏ hàng
-    card.querySelector('.book-more').onclick = (ev) => {
-      ev.stopPropagation();
-      addToCart(book);
-    };
-    genreBooksList.appendChild(card);
-  });
-}
-
-// Nút thêm vào giỏ hàng trong modal
-modalAddCartBtn.onclick = function() {
-  if (currentModalBook) addToCart(currentModalBook);
-};
-
-// ================== TAB THỂ LOẠI & TÌM KIẾM ==================
-document.querySelectorAll('.genre-tab').forEach(tab => {
-  tab.onclick = function() {
-    document.querySelectorAll('.genre-tab').forEach(t => t.classList.remove('active'));
-    this.classList.add('active');
-    currentGenre = this.getAttribute('data-genre');
-    renderGenreBooks();
-  };
-});
-document.getElementById('searchInput').addEventListener('input', function() {
-  searchValue = this.value.trim().toLowerCase();
-  renderGenreBooks();
-});
-
-// ================== HIỂN THỊ TÊN NGƯỜI DÙNG Ở MENU TÀI KHOẢN ==================
-function updateAccountMenu() {
-  const tenNguoiDung = localStorage.getItem('tenNguoiDung');
-  const tenDangNhap = localStorage.getItem('tenDangNhap');
-  const navBtn = document.querySelector('.main-nav .nav-btn');
-  const dropdown = navBtn?.parentElement.querySelector('.dropdown');
-  if (!navBtn || !dropdown) return;
-
-  if (tenNguoiDung && tenNguoiDung.trim() !== "") {
-    navBtn.innerHTML = `<i class="fa fa-user"></i> ${tenNguoiDung} <i class="fa fa-caret-down"></i>`;
-    dropdown.querySelectorAll('a').forEach(a => {
-      if (a.href.includes('dangnhap') || a.href.includes('dangky')) {
-        a.style.display = 'none';
-      } else {
-        a.style.display = '';
+          // Khi click vào thẻ sách (trừ nút thêm giỏ)
+          card.addEventListener("click", function (e) {
+            if (e.target.classList.contains("book-more")) return;
+            showBookModal(book);
+          });
+          // Khi click nút thêm vào giỏ hàng
+          card.querySelector(".book-more").onclick = (ev) => {
+            ev.stopPropagation();
+            addToCart(book);
+          };
+          genreBooksList.appendChild(card);
+        });
       }
-    });
-  } else {
-    navBtn.innerHTML = `<i class="fa fa-user"></i> Tài khoản <i class="fa fa-caret-down"></i>`;
-    dropdown.querySelectorAll('a').forEach(a => {
-      if (a.href.includes('dangnhap') || a.href.includes('dangky')) {
-        a.style.display = '';
-      } else {
-        a.style.display = 'none';
-      }
-    });
-  }
-}
-document.addEventListener('DOMContentLoaded', function() {
-  updateAccountMenu();
-  document.querySelectorAll('.main-nav .dropdown a').forEach(a => {
-    if (a.textContent.includes('Đăng xuất')) {
-      a.addEventListener('click', function(e) {
-        e.preventDefault();
-        localStorage.removeItem('tenNguoiDung');
-        localStorage.removeItem('tenDangNhap');
-        updateAccountMenu();
-        window.location.reload();
+
+      // Nút thêm vào giỏ hàng trong modal
+      modalAddCartBtn.onclick = function () {
+        if (currentModalBook) addToCart(currentModalBook);
+      };
+
+      // ================== TAB THỂ LOẠI & TÌM KIẾM ==================
+      document.querySelectorAll(".genre-tab").forEach((tab) => {
+        tab.onclick = function () {
+          document
+            .querySelectorAll(".genre-tab")
+            .forEach((t) => t.classList.remove("active"));
+          this.classList.add("active");
+          currentGenre = this.getAttribute("data-genre");
+          renderGenreBooks();
+        };
       });
-    }
-  });
-});
+      document
+        .getElementById("searchInput")
+        .addEventListener("input", function () {
+          searchValue = this.value.trim().toLowerCase();
+          renderGenreBooks();
+        });
 
-// ================== KHỞI TẠO ==================
-window.addEventListener('DOMContentLoaded', () => {
-  setTimeout(() => {
-    document.getElementById('overlay-loading').classList.add('hide');
-    setTimeout(() => {
-      document.getElementById('overlay-loading').style.display = 'none';
-      document.querySelector('.container').style.opacity = 1;
-      fadeInOnceOnScroll();
-    }, 700);
-  }, 1200);
+      // ================== HIỂN THỊ TÊN NGƯỜI DÙNG Ở MENU TÀI KHOẢN ==================
+      function updateAccountMenu() {
+        const tenNguoiDung = localStorage.getItem("tenNguoiDung");
+        const tenDangNhap = localStorage.getItem("tenDangNhap");
+        const navBtn = document.querySelector(".main-nav .nav-btn");
+        const dropdown = navBtn?.parentElement.querySelector(".dropdown");
+        if (!navBtn || !dropdown) return;
 
-  renderCarousel(false);
-  renderBookInfo(false);
-  startAutoRotate();
-  renderGenreBooks();
-});
-  </script>
-</body>
+        if (tenNguoiDung && tenNguoiDung.trim() !== "") {
+          navBtn.innerHTML = `<i class="fa fa-user"></i> ${tenNguoiDung} <i class="fa fa-caret-down"></i>`;
+          dropdown.querySelectorAll("a").forEach((a) => {
+            if (a.href.includes("dangnhap") || a.href.includes("dangky")) {
+              a.style.display = "none";
+            } else {
+              a.style.display = "";
+            }
+          });
+        } else {
+          navBtn.innerHTML = `<i class="fa fa-user"></i> Tài khoản <i class="fa fa-caret-down"></i>`;
+          dropdown.querySelectorAll("a").forEach((a) => {
+            if (a.href.includes("dangnhap") || a.href.includes("dangky")) {
+              a.style.display = "";
+            } else {
+              a.style.display = "none";
+            }
+          });
+        }
+      }
+      document.addEventListener("DOMContentLoaded", function () {
+        updateAccountMenu();
+        document.querySelectorAll(".main-nav .dropdown a").forEach((a) => {
+          if (a.textContent.includes("Đăng xuất")) {
+            a.addEventListener("click", function (e) {
+              e.preventDefault();
+              localStorage.removeItem("tenNguoiDung");
+              localStorage.removeItem("tenDangNhap");
+              updateAccountMenu();
+              window.location.reload();
+            });
+          }
+        });
+      });
+
+      // ================== KHỞI TẠO ==================
+      window.addEventListener("DOMContentLoaded", () => {
+        setTimeout(() => {
+          document.getElementById("overlay-loading").classList.add("hide");
+          setTimeout(() => {
+            document.getElementById("overlay-loading").style.display = "none";
+            document.querySelector(".container").style.opacity = 1;
+            fadeInOnceOnScroll();
+          }, 700);
+        }, 1200);
+
+        renderCarousel(false);
+        renderBookInfo(false);
+        startAutoRotate();
+        renderGenreBooks();
+      });
+    </script>
+  </body>
 </html>
