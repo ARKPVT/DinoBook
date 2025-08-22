@@ -406,7 +406,59 @@ function addToCart(book) {
   showToast(`Đã thêm "${book.title}" vào giỏ hàng!`);
 }
 
+function flyToCart(sourceEl) {
+  try {
+    const cartIcon =
+      document.querySelector(".cart-item i.fa-shopping-cart") ||
+      document.querySelector(".cart-item a") ||
+      document.querySelector(".cart-item");
+    if (!sourceEl || !cartIcon) return;
 
+    // Lấy vị trí trên viewport
+    const s = sourceEl.getBoundingClientRect();
+    const t = cartIcon.getBoundingClientRect();
+
+    // Tạo bản sao ảnh
+    const clone = sourceEl.cloneNode(true);
+    clone.classList.add("fly-to-cart");
+    clone.style.width = s.width + "px";
+    clone.style.height = s.height + "px";
+    clone.style.left = s.left + "px";
+    clone.style.top = s.top + "px";
+    clone.style.transform = "translate3d(0,0,0) scale(1)";
+    clone.style.opacity = "1";
+    document.body.appendChild(clone);
+
+    // Force reflow để transition hoạt động
+    clone.getBoundingClientRect();
+
+    // Tính quỹ đạo
+    const endX = (t.left + t.width / 2) - (s.left + s.width / 2);
+    const endY = (t.top + t.height / 2) - (s.top + s.height / 2);
+    const scale = Math.max(0.15, Math.min(0.3, t.width / s.width));
+
+    // Animate
+    clone.style.transform = `translate(${endX}px, ${endY}px) scale(${scale}) rotate(12deg)`;
+    clone.style.opacity = "0.35";
+
+    const onEnd = () => {
+      clone.removeEventListener("transitionend", onEnd);
+      clone.remove();
+
+      // Bump cart + pop badge
+      cartIcon.classList.add("cart-bump");
+      const badge = document.getElementById("cart-count");
+      if (badge) badge.classList.add("badge-pop");
+      setTimeout(() => {
+        cartIcon.classList.remove("cart-bump");
+        if (badge) badge.classList.remove("badge-pop");
+      }, 520);
+    };
+    clone.addEventListener("transitionend", onEnd);
+  } catch (e) {
+    // bỏ qua nếu có lỗi nhỏ
+  }
+}
 function updateCartCount() {
   const cart = getCart();
   let totalQty = cart.reduce((sum, item) => sum + item.qty, 0);
@@ -492,6 +544,8 @@ function renderGenreBooks() {
     card.querySelector(".book-more").onclick = (ev) => {
       ev.stopPropagation();
       addToCart(book);
+      const imgEl = card.querySelector(".book-cover");  // ảnh bìa trong card
+  flyToCart(imgEl);
     };
     genreBooksList.appendChild(card);
   });
@@ -499,7 +553,11 @@ function renderGenreBooks() {
 
 // Nút thêm vào giỏ hàng trong modal
 modalAddCartBtn.onclick = function () {
-  if (currentModalBook) addToCart(currentModalBook);
+  if (currentModalBook) {
+    addToCart(currentModalBook);
+    const imgEl = document.getElementById("modalBookCover"); // ảnh bìa trong modal
+    flyToCart(imgEl);
+  }
 };
 
 // ================== TAB THỂ LOẠI & TÌM KIẾM ==================
