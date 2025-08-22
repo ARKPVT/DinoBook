@@ -998,3 +998,27 @@ body {
   pointer-events: auto;
   bottom: 54px;
 }
+
+
+
+
+.cart-item {
+  position: relative;
+}
+
+.cart-badge {
+  position: absolute;
+  top: -8px;
+  right: -12px;
+  background: red;
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+  border-radius: 50%;
+  width: 20px;       /* chiều ngang vòng tròn */
+  height: 20px;      /* chiều cao vòng tròn */
+  display: flex;     /* căn giữa số */
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 2px rgba(0,0,0,0.3);
+}

@@ -188,3 +188,40 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 });
+
+function getCart() {
+  try {
+    return JSON.parse(localStorage.getItem('cart')) || [];
+  } catch {
+    return [];
+  }
+}
+
+function setCart(cart) {
+  localStorage.setItem('cart', JSON.stringify(cart));
+}
+
+function updateCartCount() {
+  const cart = getCart();
+  let totalQty = cart.reduce((sum, item) => sum + item.qty, 0);
+  localStorage.setItem('cart_total_qty', totalQty);
+
+  const badge = document.getElementById('cart-count');
+  if (badge) {
+    badge.textContent = totalQty;
+    badge.style.display = totalQty > 0 ? "flex" : "none";
+  }
+}
+
+// Hàm này chỉ để đảm bảo khi load lại trang khác thì badge vẫn đúng
+function updateCartBadge() {
+  const badge = document.getElementById("cart-count");
+  if (!badge) return;
+
+  let count = parseInt(localStorage.getItem("cart_total_qty")) || 0;
+  badge.textContent = count;
+  badge.style.display = count > 0 ? "flex" : "none";
+}
+
+// Gọi khi load trang
+document.addEventListener("DOMContentLoaded", updateCartBadge);
