@@ -1,0 +1,34 @@
+html, body { height: 100%; margin: 0; padding: 0; background: linear-gradient(120deg, #ffecd2 0%, #fcb69f 100%); font-family: 'Segoe UI', Arial, sans-serif; }
+body { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.register-container { background: rgba(255,255,255,0.97); border-radius: 18px; box-shadow: 0 8px 32px #ff7e3f22, 0 2px 12px #ffecd244; padding: 38px 28px 28px 28px; max-width: 400px; width: 100%; margin: 40px 0 24px 0; display: flex; flex-direction: column; align-items: center; position: relative; animation: fadeInReg 0.8s cubic-bezier(.4,2,.6,1); }
+@keyframes fadeInReg { from { opacity: 0; transform: translateY(40px) scale(0.98);} to { opacity: 1; transform: none;} }
+.register-logo { font-size: 2.5rem; margin-bottom: 10px; filter: drop-shadow(0 2px 8px #ff7e3f44); animation: dino-bounce 1.2s infinite alternate cubic-bezier(.4,2,.6,1); user-select: none; }
+@keyframes dino-bounce { to { transform: translateY(-10px) scale(1.08);} }
+.register-title { font-size: 1.7rem; font-weight: 800; color: #ff7e3f; margin-bottom: 18px; letter-spacing: 1px; text-shadow: 0 2px 8px #fff8; text-align: center; }
+.register-form { width: 100%; display: flex; flex-direction: column; gap: 16px; }
+.register-form label { font-weight: 600; color: #1a3d2f; margin-bottom: 6px; display: block; font-size: 1rem; }
+.register-form .form-group { display: flex; flex-direction: column; margin-bottom: 0; position: relative; width: 100%; }
+.register-form input { width: 100%; padding: 10px 38px 10px 14px; border-radius: 8px; border: 1.5px solid #ffb347; font-size: 1rem; background: #fff; transition: box-shadow 0.2s, border 0.2s; outline: none; box-shadow: 0 2px 8px #ffecd244; margin-bottom: 0; box-sizing: border-box; }
+.register-form input:focus { border: 2px solid #ff7e3f; box-shadow: 0 4px 16px #ffb34733; }
+.register-form .toggle-pass { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; font-size: 1.25em; cursor: pointer; z-index: 2; opacity: 0.95; padding: 0; height: 32px; width: 32px; display: flex; align-items: center; justify-content: center; transition: opacity 0.2s; }
+.register-form .toggle-pass i { color: #ffb347 !important; font-size: 1.25em; transition: color 0.2s; }
+.register-form .toggle-pass:hover i { color: #ff7e3f !important; }
+.register-form .error-msg { color: #e05d1f; font-size: 0.97rem; margin-top: 4px; min-height: 18px; font-weight: 600; letter-spacing: 0.2px; text-shadow: 0 2px 8px #fff8; animation: shake 0.3s; margin-bottom: 0; }
+@keyframes shake { 10%, 90% { transform: translateX(-2px);} 20%, 80% { transform: translateX(4px);} 30%, 50%, 70% { transform: translateX(-6px);} 40%, 60% { transform: translateX(6px);} }
+.register-btn { background: linear-gradient(90deg, #ff7e3f 40%, #ffb347 100%); color: #fff; border: none; border-radius: 8px; padding: 12px 0; font-size: 1.1rem; font-weight: 700; cursor: pointer; margin-top: 10px; box-shadow: 0 2px 8px #ffecd244; transition: background 0.2s, box-shadow 0.2s, transform 0.18s; letter-spacing: 1px; position: relative; overflow: hidden; width: 100%; display: flex; align-items: center; justify-content: center; gap: 10px; }
+.register-btn.loading { pointer-events: none; opacity: 0.7; }
+.register-btn .btn-spinner { display: none; font-size: 1.1em; animation: spin 1s linear infinite; }
+.register-btn.loading .btn-spinner { display: inline-block; }
+@keyframes spin { 100% { transform: rotate(360deg);} }
+.register-btn.loading span { opacity: 0.5; }
+.register-btn:hover { background: linear-gradient(90deg, #e05d1f 40%, #ffb347 100%); box-shadow: 0 4px 24px #ffb34744, 0 2px 12px #ffecd244; transform: translateY(-2px) scale(1.03); }
+.register-success { display: none; color: #fff; background: linear-gradient(90deg, #ff7e3f 40%, #ffb347 100%); border-radius: 8px; padding: 18px 10px 14px 10px; margin-top: 18px; font-weight: 700; text-align: center; box-shadow: 0 2px 8px #ffecd244; animation: fadeInReg 0.7s cubic-bezier(.4,2,.6,1); font-size: 1.1rem; letter-spacing: 0.5px; text-shadow: 0 2px 8px #fff8; }
+.register-success a { color: #fff; font-weight: 700; text-decoration: underline; margin-left: 8px; }
+.register-success .fa-check-circle { color: #fff; font-size: 1.5em; margin-bottom: 6px; display: block; animation: popIn 0.5s cubic-bezier(.4,2,.6,1); }
+@keyframes popIn { from { transform: scale(0.5); opacity: 0;} to { transform: scale(1); opacity: 1;} }
+@media (max-width: 600px) {
+  .register-container { padding: 18px 4vw 14px 4vw; max-width: 98vw;}
+  .register-title { font-size: 1.2rem; }
+  .register-logo { font-size: 1.5rem; }
+  .register-btn { font-size: 1rem; }
+}
