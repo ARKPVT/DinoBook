@@ -676,3 +676,45 @@ input[type="checkbox"].cart-select:checked {
   justify-content: center;
   box-shadow: 0 0 2px rgba(0,0,0,0.3);
 }
+/* === FIX LỆCH BỐ CỤC — thêm ở CUỐI file, không xóa dòng nào === */
+
+/* 1) Ổn định box-sizing và baseline chữ + icon */
+html { box-sizing: border-box; }
+*, *::before, *::after { box-sizing: inherit; }
+img, svg, i, .fa { vertical-align: middle; }
+.cart-cover { display: block; } /* tránh khoảng trắng baseline dưới ảnh */
+
+/* 2) Header/Nav: line-height cố định để tránh “nhảy” theo font/icon */
+.main-nav ul.nav-links li a,
+.main-nav ul.nav-links li .nav-btn { line-height: 1; }
+.main-nav ul.nav-links li a .fa,
+.main-nav .logo .fa-book-open { vertical-align: middle; }
+
+/* 3) Badge giỏ hàng: neo đúng góc phải trên (không phụ thuộc font-size) */
+.cart-link { position: relative; display: inline-flex; align-items: center; }
+.cart-count {
+  top: 0;
+  right: 0;
+  transform: translate(45%, -45%);
+  /* các thuộc tính khác giữ nguyên */
+}
+.cart-item { position: relative; }
+.cart-badge {
+  top: 0;
+  right: 0;
+  transform: translate(45%, -45%);
+  width: 20px;
+  height: 20px;
+  line-height: 20px; /* căn giữa số đẹp hơn */
+}
+
+/* 4) Tránh các nút/qty xuống dòng làm xô lệch */
+.cart-qty, .cart-actions { white-space: nowrap; }
+
+/* 5) Hover trên hàng bảng: tối ưu vẽ để không “đẩy” layout xung quanh */
+.cart-list tbody tr { will-change: transform; transform-origin: center; }
+
+/* 6) Màn hình nhỏ: nếu chật, cho phép cuộn ngang thay vì bể layout */
+@media (max-width: 700px) {
+  .cart-container { overflow-x: auto; }
+}
