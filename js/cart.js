@@ -262,6 +262,7 @@ cartFormPopup.onsubmit = function(e) {
     cartFormError.textContent = "Số điện thoại không hợp lệ!";
     return;
   }
+
   // Hiện xác nhận đơn hàng
   const cart = getCart();
   const selected = getSelected();
@@ -283,7 +284,11 @@ cartFormPopup.onsubmit = function(e) {
   cartPopupMsg.innerHTML = msg;
   cartFormPopup.style.display = "none";
   cartPopupSuccess.style.display = "";
+
+  // Gửi dữ liệu sang Google Sheet
+  sendOrderToSheet(name, phone, address, selectedBooks, total);
 };
+
 cartPopupClose.onclick = function() {
   cartPopupOverlay.classList.remove('active');
   document.body.style.overflow = '';
@@ -329,3 +334,29 @@ function updateCartBadge() {
 
 // Gọi khi load trang
 document.addEventListener("DOMContentLoaded", updateCartBadge);
+async function sendOrderToSheet(name, phone, address, books, total) {
+  const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwWaayNCu9F4DghOq4Sl03unpLfweUZjbM0FdEbQOqFRtiSUdC6g_pmRX36P0djZUzYMA/exec";
+  const payload = {
+    name: name || "",
+    phone: phone || "",
+    address: address || "",
+    items: Array.isArray(books) ? books.map(b => `${b.title} (x${b.qty})`).join(", ") : (books || ""),
+    total: total || 0
+  };
+
+  try {
+    const res = await fetch(WEB_APP_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+
+    // Nếu server trả về JSON (ứng dụng Apps Script chuẩn) -> parse
+    const data = await res.json(); 
+    return data; // { status: "success" } hoặc { status: "error", message: "..."}
+  } catch (err) {
+    // Lỗi mạng / CORS / JSON.parse ...
+    throw err;
+  }
+}
+
