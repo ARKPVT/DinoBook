@@ -15,7 +15,7 @@ const books = [
   {
     title: "See What I Have Done",
     author: "Sarah Schmidt",
-    cover: "https://covers.openlibrary.org/b/id/8231996-L.jpg",
+    cover: "https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1481137541i/32508637.jpg",
     content: `
       <h2>See What I Have Done</h2>
       <p><b>Tác giả:</b> Sarah Schmidt</p>
